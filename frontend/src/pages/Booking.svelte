@@ -13,7 +13,7 @@
 
   let { route }: { route?: RouteResult } = $props();
 
-  const eventTypeId = $derived(route?.result?.path?.params?.eventTypeId as string ?? '');
+  const eventTypeId = $derived(String((route?.result?.path?.params as Record<string, string>)?.eventTypeId ?? ''));
 
   // Use store value saved when user clicked the event type card — stable across query refetches
   const selectedEventType = $derived(getSelectedEventType());

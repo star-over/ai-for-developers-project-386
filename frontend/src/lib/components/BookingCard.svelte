@@ -46,7 +46,7 @@
   };
 </script>
 
-{#if bookingQuery.isSuccess && bookingQuery.data?.data}
+{#if bookingQuery.isSuccess && bookingQuery.data?.status === 200}
   {@const booking = bookingQuery.data.data}
   <Card.Root>
     <Card.Content class="p-4">

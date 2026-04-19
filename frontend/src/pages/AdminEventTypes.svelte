@@ -6,7 +6,7 @@
     createByIdDelete,
     getEventTypesListQueryKey,
   } from '$lib/api/default/default.js';
-  import type { EventType } from '$lib/api/model/index.js';
+  import type { EventType, Duration } from '$lib/api/model/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
@@ -32,7 +32,7 @@
   let sheetOpen = $state(false);
   let editingId = $state<string | null>(null);
   let formName = $state('');
-  let formDuration = $state(30);
+  let formDuration = $state<Duration>(30);
   let formErrors = $state<{ name?: string; duration?: string }>({});
   let deleteTarget = $state<EventType | null>(null);
 

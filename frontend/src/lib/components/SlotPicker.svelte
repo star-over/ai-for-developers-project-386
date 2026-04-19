@@ -67,7 +67,7 @@
     </div>
   {:else if query.isError}
     <p class="text-sm text-destructive">{t.common.error}</p>
-  {:else if !query.data?.data || query.data.data.length === 0}
+  {:else if query.data?.status !== 200 || query.data.data.length === 0}
     <p class="text-sm text-muted-foreground">Нет доступных слотов</p>
   {:else}
     <div class="grid grid-cols-3 gap-2">

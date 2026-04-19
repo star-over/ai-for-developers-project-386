@@ -57,6 +57,7 @@ make dev-backend   # Fastify dev server
 make dev-frontend  # Vite dev server
 make lint          # ESLint check
 make lint-fix      # ESLint autofix
+make typecheck     # TypeScript type check (svelte-check)
 make test          # Vitest (frontend + backend)
 make test-e2e      # Playwright e2e
 ```

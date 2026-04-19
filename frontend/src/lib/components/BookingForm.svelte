@@ -44,6 +44,7 @@
       { data: { eventTypeId, startTime, guestName, guestEmail } },
       {
         onSuccess: (response) => {
+          if (response.status !== 201) return;
           saveGuestProfile({ name: guestName, email: guestEmail });
           addBookingId({ id: response.data.id });
           success = true;

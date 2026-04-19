@@ -1,4 +1,4 @@
-.PHONY: spec-build api-generate generate mock lint lint-fix test test-e2e
+.PHONY: spec-build api-generate generate mock lint lint-fix typecheck test test-e2e
 
 spec-build:
 	cd spec && npx tsp compile .
@@ -16,6 +16,9 @@ lint:
 
 lint-fix:
 	npx eslint . --fix
+
+typecheck:
+	cd frontend && npx svelte-check --tsconfig ./tsconfig.json
 
 test:
 	cd backend && npx vitest run
