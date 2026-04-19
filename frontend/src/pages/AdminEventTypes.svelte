@@ -216,26 +216,51 @@
   </Sheet.Root>
 {/if}
 
-<!-- Delete Dialog -->
-<Dialog.Root open={!!deleteTarget} onOpenChange={(open) => { if (!open) deleteTarget = null; }}>
-  <Dialog.Content>
-    <Dialog.Header>
-      <Dialog.Title>{t.admin.eventTypes.confirmDelete}</Dialog.Title>
-      {#if deleteTarget}
-        <Dialog.Description>{deleteTarget.name}</Dialog.Description>
-      {/if}
-    </Dialog.Header>
-    <Dialog.Footer>
-      <Button variant="outline" onclick={() => { deleteTarget = null; }}>
-        {t.admin.eventTypes.form.cancel}
-      </Button>
-      <Button
-        variant="destructive"
-        disabled={deleteMutation.isPending}
-        onclick={() => deleteTarget && handleDelete({ id: deleteTarget.id })}
-      >
-        {t.admin.eventTypes.delete}
-      </Button>
-    </Dialog.Footer>
-  </Dialog.Content>
-</Dialog.Root>
+<!-- Delete confirmation: Desktop Dialog / Mobile Sheet -->
+{#if isDesktop}
+  <Dialog.Root open={!!deleteTarget} onOpenChange={(open) => { if (!open) deleteTarget = null; }}>
+    <Dialog.Content>
+      <Dialog.Header>
+        <Dialog.Title>{t.admin.eventTypes.confirmDelete}</Dialog.Title>
+        {#if deleteTarget}
+          <Dialog.Description>{deleteTarget.name}</Dialog.Description>
+        {/if}
+      </Dialog.Header>
+      <Dialog.Footer>
+        <Button variant="outline" onclick={() => { deleteTarget = null; }}>
+          {t.admin.eventTypes.form.cancel}
+        </Button>
+        <Button
+          variant="destructive"
+          disabled={deleteMutation.isPending}
+          onclick={() => deleteTarget && handleDelete({ id: deleteTarget.id })}
+        >
+          {t.admin.eventTypes.delete}
+        </Button>
+      </Dialog.Footer>
+    </Dialog.Content>
+  </Dialog.Root>
+{:else}
+  <Sheet.Root open={!!deleteTarget} onOpenChange={(open) => { if (!open) deleteTarget = null; }}>
+    <Sheet.Content side="bottom">
+      <Sheet.Header>
+        <Sheet.Title>{t.admin.eventTypes.confirmDelete}</Sheet.Title>
+        {#if deleteTarget}
+          <Sheet.Description>{deleteTarget.name}</Sheet.Description>
+        {/if}
+      </Sheet.Header>
+      <Sheet.Footer class="px-4 pb-4">
+        <Button variant="outline" onclick={() => { deleteTarget = null; }}>
+          {t.admin.eventTypes.form.cancel}
+        </Button>
+        <Button
+          variant="destructive"
+          disabled={deleteMutation.isPending}
+          onclick={() => deleteTarget && handleDelete({ id: deleteTarget.id })}
+        >
+          {t.admin.eventTypes.delete}
+        </Button>
+      </Sheet.Footer>
+    </Sheet.Content>
+  </Sheet.Root>
+{/if}

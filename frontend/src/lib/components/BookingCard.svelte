@@ -2,6 +2,7 @@
   import { createByIdGet, createByIdCancel } from '$lib/api/default/default.js';
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
+  import * as Sheet from '$lib/components/ui/sheet/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Badge } from '$lib/components/ui/badge/index.js';
   import { removeBookingId } from '$lib/stores/bookings.svelte.js';
@@ -12,6 +13,14 @@
   const bookingQuery = createByIdGet(() => id);
   const cancelMutation = createByIdCancel();
   let dialogOpen = $state(false);
+
+  let innerWidth = $state(window.innerWidth);
+  $effect(() => {
+    const onResize = () => { innerWidth = window.innerWidth; };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  });
+  const isDesktop = $derived(innerWidth >= 768);
 
   const formatDateTime = ({ isoStr }: { isoStr: string }) => {
     const d = new Date(isoStr);
@@ -26,6 +35,20 @@
       removeBookingId({ id });
     }
   });
+
+  const handleCancel = () => {
+    cancelMutation.mutate({ id }, {
+      onSuccess: () => {
+        dialogOpen = false;
+        removeBookingId({ id });
+        onCanceled();
+      },
+      onError: () => {
+        dialogOpen = false;
+        removeBookingId({ id });
+      },
+    });
+  };
 </script>
 
 {#if bookingQuery.isSuccess && bookingQuery.data?.data}
@@ -50,36 +73,50 @@
     </Card.Content>
   </Card.Root>
 
-  <Dialog.Root bind:open={dialogOpen}>
-    <Dialog.Content>
-      <Dialog.Header>
-        <Dialog.Title>{t.myBookings.confirmCancel}</Dialog.Title>
-        <Dialog.Description>{booking.eventTypeName}</Dialog.Description>
-      </Dialog.Header>
-      <Dialog.Footer>
-        <Button variant="outline" onclick={() => { dialogOpen = false; }}>
-          {t.admin.eventTypes.form.cancel}
-        </Button>
-        <Button
-          variant="destructive"
-          disabled={cancelMutation.isPending}
-          onclick={() => {
-            cancelMutation.mutate({ id }, {
-              onSuccess: () => {
-                dialogOpen = false;
-                removeBookingId({ id });
-                onCanceled();
-              },
-              onError: () => {
-                dialogOpen = false;
-                removeBookingId({ id });
-              },
-            });
-          }}
-        >
-          {t.myBookings.cancel}
-        </Button>
-      </Dialog.Footer>
-    </Dialog.Content>
-  </Dialog.Root>
+  <!-- Desktop: centered Dialog -->
+  {#if isDesktop}
+    <Dialog.Root bind:open={dialogOpen}>
+      <Dialog.Content>
+        <Dialog.Header>
+          <Dialog.Title>{t.myBookings.confirmCancel}</Dialog.Title>
+          <Dialog.Description>{booking.eventTypeName}</Dialog.Description>
+        </Dialog.Header>
+        <Dialog.Footer>
+          <Button variant="outline" onclick={() => { dialogOpen = false; }}>
+            {t.admin.eventTypes.form.cancel}
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={cancelMutation.isPending}
+            onclick={handleCancel}
+          >
+            {t.myBookings.cancel}
+          </Button>
+        </Dialog.Footer>
+      </Dialog.Content>
+    </Dialog.Root>
+
+  <!-- Mobile: bottom Sheet -->
+  {:else}
+    <Sheet.Root bind:open={dialogOpen}>
+      <Sheet.Content side="bottom">
+        <Sheet.Header>
+          <Sheet.Title>{t.myBookings.confirmCancel}</Sheet.Title>
+          <Sheet.Description>{booking.eventTypeName}</Sheet.Description>
+        </Sheet.Header>
+        <Sheet.Footer class="px-4 pb-4">
+          <Button variant="outline" onclick={() => { dialogOpen = false; }}>
+            {t.admin.eventTypes.form.cancel}
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={cancelMutation.isPending}
+            onclick={handleCancel}
+          >
+            {t.myBookings.cancel}
+          </Button>
+        </Sheet.Footer>
+      </Sheet.Content>
+    </Sheet.Root>
+  {/if}
 {/if}
