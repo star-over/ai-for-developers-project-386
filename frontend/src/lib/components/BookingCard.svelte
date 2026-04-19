@@ -78,7 +78,7 @@
     <Dialog.Root bind:open={dialogOpen}>
       <Dialog.Content>
         <Dialog.Header>
-          <Dialog.Title>{t.myBookings.confirmCancel}</Dialog.Title>
+          <Dialog.Title>{t.myBookings.confirmTitle}</Dialog.Title>
           <Dialog.Description>{booking.eventTypeName}</Dialog.Description>
         </Dialog.Header>
         <Dialog.Footer>
@@ -90,7 +90,7 @@
             disabled={cancelMutation.isPending}
             onclick={handleCancel}
           >
-            {t.myBookings.cancel}
+            {t.myBookings.confirmAction}
           </Button>
         </Dialog.Footer>
       </Dialog.Content>
@@ -101,7 +101,7 @@
     <Sheet.Root bind:open={dialogOpen}>
       <Sheet.Content side="bottom">
         <Sheet.Header>
-          <Sheet.Title>{t.myBookings.confirmCancel}</Sheet.Title>
+          <Sheet.Title>{t.myBookings.confirmTitle}</Sheet.Title>
           <Sheet.Description>{booking.eventTypeName}</Sheet.Description>
         </Sheet.Header>
         <Sheet.Footer class="px-4 pb-4">
@@ -113,7 +113,7 @@
             disabled={cancelMutation.isPending}
             onclick={handleCancel}
           >
-            {t.myBookings.cancel}
+            {t.myBookings.confirmAction}
           </Button>
         </Sheet.Footer>
       </Sheet.Content>

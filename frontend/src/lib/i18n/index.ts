@@ -58,7 +58,8 @@ export const t = {
     title: 'Мои записи',
     empty: 'У вас нет записей',
     cancel: 'Отменить',
-    confirmCancel: 'Отменить запись?',
+    confirmTitle: 'Удалить запись?',
+    confirmAction: 'Удалить',
   },
   common: {
     loading: 'Загрузка...',
