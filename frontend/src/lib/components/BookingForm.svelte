@@ -83,7 +83,7 @@
       <Label for="guestEmail">{t.booking.form.email}</Label>
       <Input
         id="guestEmail"
-        type="email"
+        type="text"
         bind:value={guestEmail}
         placeholder={t.booking.form.emailPlaceholder}
         class={errors.guestEmail ? 'border-destructive' : ''}
