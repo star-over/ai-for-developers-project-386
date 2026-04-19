@@ -34,6 +34,12 @@
     formOpen = false;
     selectedSlot = null;
   };
+
+  const formatSlotDate = ({ isoStr }: { isoStr: string }) =>
+    new Date(isoStr).toLocaleDateString('ru', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const formatSlotTime = ({ isoStr }: { isoStr: string }) =>
+    new Date(isoStr).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
 </script>
 
 <div class="mx-auto max-w-lg p-4">
@@ -51,16 +57,26 @@
   {/if}
 </div>
 
+{#snippet bookingSummary()}
+  {#if eventType && selectedSlot}
+    <div class="mx-4 my-2 rounded-lg bg-muted/50 px-4 py-3 text-sm">
+      <p class="font-medium">{eventType.name}</p>
+      <p class="mt-1 text-muted-foreground">
+        {formatSlotDate({ isoStr: selectedSlot })} · {formatSlotTime({ isoStr: selectedSlot })}
+      </p>
+      <Badge variant="secondary" class="mt-2">{eventType.duration} мин</Badge>
+    </div>
+  {/if}
+{/snippet}
+
 <!-- Desktop: centered Dialog -->
 {#if isDesktop}
   <Dialog.Root bind:open={formOpen} onOpenChange={(open) => { if (!open) closeForm(); }}>
     <Dialog.Content class="sm:max-w-md">
       <Dialog.Header>
         <Dialog.Title>{t.booking.formTitle}</Dialog.Title>
-        {#if eventType}
-          <Dialog.Description>{eventType.name}</Dialog.Description>
-        {/if}
       </Dialog.Header>
+      {@render bookingSummary()}
       <div class="px-4 py-2">
         {#if selectedSlot}
           <BookingForm {eventTypeId} startTime={selectedSlot} onCancel={closeForm} />
@@ -75,10 +91,8 @@
     <Sheet.Content side="bottom" class="max-h-[80vh]">
       <Sheet.Header>
         <Sheet.Title>{t.booking.formTitle}</Sheet.Title>
-        {#if eventType}
-          <Sheet.Description>{eventType.name}</Sheet.Description>
-        {/if}
       </Sheet.Header>
+      {@render bookingSummary()}
       <div class="px-4 py-2 pb-4">
         {#if selectedSlot}
           <BookingForm {eventTypeId} startTime={selectedSlot} onCancel={closeForm} />
