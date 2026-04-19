@@ -22,10 +22,12 @@ export const t = {
     slotFree: 'Свободно',
     slotTaken: 'Занято',
     continue: 'Продолжить',
+    formTitle: 'Ваши данные',
     form: {
       name: 'Ваше имя',
       email: 'Email',
       submit: 'Записаться',
+      cancel: 'Отмена',
       namePlaceholder: 'Введите имя',
       emailPlaceholder: 'mail@example.com',
     },

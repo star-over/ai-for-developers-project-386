@@ -8,9 +8,10 @@
   import { addBookingId } from '$lib/stores/bookings.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
-  let { eventTypeId, startTime }: {
+  let { eventTypeId, startTime, onCancel }: {
     eventTypeId: string;
     startTime: string;
+    onCancel?: () => void;
   } = $props();
 
   let guestName = $state('');
@@ -93,8 +94,15 @@
       <p class="text-sm text-destructive">{serverError}</p>
     {/if}
 
-    <Button type="submit" disabled={mutation.isPending}>
-      {mutation.isPending ? t.common.loading : t.booking.form.submit}
-    </Button>
+    <div class="flex gap-2">
+      {#if onCancel}
+        <Button type="button" variant="outline" onclick={onCancel} class="flex-1">
+          {t.booking.form.cancel}
+        </Button>
+      {/if}
+      <Button type="submit" disabled={mutation.isPending} class={onCancel ? 'flex-1' : 'w-full'}>
+        {mutation.isPending ? t.common.loading : t.booking.form.submit}
+      </Button>
+    </div>
   {/if}
 </form>
