@@ -105,7 +105,7 @@
       <p class="text-sm text-destructive">{serverError}</p>
     {/if}
 
-    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+    <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
       {#if onCancel}
         <Button type="button" variant="outline" onclick={onCancel}>
           {t.booking.form.cancel}
