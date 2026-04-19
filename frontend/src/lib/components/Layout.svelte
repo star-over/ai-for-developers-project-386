@@ -16,9 +16,17 @@
   let currentPath = $state(window.location.pathname);
 
   $effect(() => {
+    const orig = history.pushState.bind(history);
+    history.pushState = (...args) => {
+      orig(...args);
+      currentPath = window.location.pathname;
+    };
     const onPopState = () => { currentPath = window.location.pathname; };
     window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
+    return () => {
+      history.pushState = orig;
+      window.removeEventListener('popstate', onPopState);
+    };
   });
 
   const navigate = ({ path }: { path: string }) => {
