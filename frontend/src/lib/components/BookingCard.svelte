@@ -4,7 +4,7 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
-  import { Badge } from '$lib/components/ui/badge/index.js';
+  import BookingCardContent from '$lib/components/BookingCardContent.svelte';
   import { removeBookingId } from '$lib/stores/bookings.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
@@ -21,14 +21,6 @@
     return () => window.removeEventListener('resize', onResize);
   });
   const isDesktop = $derived(innerWidth >= 768);
-
-  const formatDateTime = ({ isoStr }: { isoStr: string }) => {
-    const d = new Date(isoStr);
-    return d.toLocaleString('ru', {
-      day: '2-digit', month: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit',
-    });
-  };
 
   $effect(() => {
     if (bookingQuery.isError) {
@@ -55,21 +47,22 @@
   {@const booking = bookingQuery.data.data}
   <Card.Root>
     <Card.Content class="p-4">
-      <div class="flex items-start justify-between gap-2">
-        <div class="flex-1">
-          <p class="font-medium">{booking.eventTypeName}</p>
-          <p class="mt-1 text-sm">{formatDateTime({ isoStr: booking.startTime })}</p>
-          <Badge variant="secondary" class="mt-1">{booking.duration} мин</Badge>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          class="text-destructive hover:text-destructive"
-          onclick={() => { dialogOpen = true; }}
-        >
-          {t.myBookings.confirmAction}
-        </Button>
-      </div>
+      <BookingCardContent
+        eventTypeName={booking.eventTypeName}
+        startTime={booking.startTime}
+        duration={booking.duration}
+      >
+        {#snippet actions()}
+          <Button
+            variant="ghost"
+            size="sm"
+            class="text-destructive hover:text-destructive"
+            onclick={() => { dialogOpen = true; }}
+          >
+            {t.myBookings.confirmAction}
+          </Button>
+        {/snippet}
+      </BookingCardContent>
     </Card.Content>
   </Card.Root>
 
