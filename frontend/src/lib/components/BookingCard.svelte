@@ -67,7 +67,7 @@
           class="text-destructive hover:text-destructive"
           onclick={() => { dialogOpen = true; }}
         >
-          {t.myBookings.cancel}
+          {t.myBookings.confirmAction}
         </Button>
       </div>
     </Card.Content>

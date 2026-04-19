@@ -57,7 +57,6 @@ export const t = {
   myBookings: {
     title: 'Мои записи',
     empty: 'У вас нет записей',
-    cancel: 'Отменить',
     confirmTitle: 'Удалить запись?',
     confirmAction: 'Удалить',
   },
