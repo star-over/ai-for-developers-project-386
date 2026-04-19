@@ -10,8 +10,12 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
+  import MoreVerticalIcon from '@lucide/svelte/icons/more-vertical';
+  import PencilIcon from '@lucide/svelte/icons/pencil';
+  import Trash2Icon from '@lucide/svelte/icons/trash-2';
   import EventTypeCardContent from '$lib/components/EventTypeCardContent.svelte';
   import { Label } from '$lib/components/ui/label/index.js';
   import { eventTypeSchema } from '$lib/validation/schemas.js';
@@ -121,19 +125,29 @@
           <Card.Content class="p-4">
             <EventTypeCardContent name={et.name} duration={et.duration}>
               {#snippet actions()}
-                <div class="flex gap-2">
-                  <Button variant="outline" size="sm" onclick={() => openEdit({ et })}>
-                    {t.admin.eventTypes.edit}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    class="text-destructive hover:text-destructive"
-                    onclick={() => { deleteTarget = et; }}
-                  >
-                    {t.admin.eventTypes.delete}
-                  </Button>
-                </div>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger>
+                    {#snippet child({ props })}
+                      <Button {...props} variant="ghost" size="icon" class="h-8 w-8 text-muted-foreground">
+                        <MoreVerticalIcon class="h-4 w-4" />
+                      </Button>
+                    {/snippet}
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Content align="end" class="w-40">
+                    <DropdownMenu.Item onSelect={() => openEdit({ et })}>
+                      <PencilIcon class="mr-2 h-4 w-4" />
+                      {t.admin.eventTypes.edit}
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Separator />
+                    <DropdownMenu.Item
+                      class="text-destructive focus:text-destructive"
+                      onSelect={() => { deleteTarget = et; }}
+                    >
+                      <Trash2Icon class="mr-2 h-4 w-4" />
+                      {t.admin.eventTypes.delete}
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Root>
               {/snippet}
             </EventTypeCardContent>
           </Card.Content>

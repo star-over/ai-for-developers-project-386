@@ -52,7 +52,7 @@
   </div>
 
   {#if actions}
-    <div class="shrink-0">
+    <div class="shrink-0 self-start">
       {@render actions()}
     </div>
   {/if}
