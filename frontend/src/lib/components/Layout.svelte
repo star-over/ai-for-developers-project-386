@@ -58,6 +58,9 @@
       <span class="text-sm font-semibold text-muted-foreground">{t.nav.brand}</span>
     </div>
     <nav class="mt-2 flex flex-col gap-1 px-2">
+      <p class="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {t.nav.sectionGuest}
+      </p>
       {#each navLinks as link (link.path)}
         <button
           type="button"
@@ -74,6 +77,9 @@
 
       <Separator class="my-2" />
 
+      <p class="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {t.nav.sectionOwner}
+      </p>
       {#each adminLinks as link (link.path)}
         <button
           type="button"

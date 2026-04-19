@@ -5,6 +5,8 @@ export const t = {
     adminBookings: 'Встречи',
     adminEventTypes: 'Типы событий',
     brand: 'Запись на звонок',
+    sectionGuest: 'Гость',
+    sectionOwner: 'Кабинет',
   },
   home: {
     title: 'Запишитесь на встречу',
