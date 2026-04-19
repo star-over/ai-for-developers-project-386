@@ -14,30 +14,52 @@
 
 ## Порядок задач
 
+> **Порядок:** Фронтенд реализуется первым на Prism mock-сервере, бэкенд — после.
+> Детальный план фронтенда: `docs/frontend-plan.md`
+
+### Этап 1: Инфраструктура (выполнено)
+
+| # | Задача | Статус |
+|---|--------|--------|
+| 1 | Корневой scaffolding + Makefile | ✅ Done |
+| 2 | TypeSpec API-контракт | ✅ Done |
+
+### Этап 2: Frontend (текущий)
+
+Фронтенд разрабатывается с Prism mock-сервером (`make mock`), без реального бэкенда.
+
 | # | Задача | Зависит от |
 |---|--------|-----------|
-| 1 | Корневой scaffolding + Makefile | — |
-| 2 | TypeSpec API-контракт | 1 |
-| 3 | Backend scaffolding | 1 |
-| 4 | DB schema (Drizzle) | 3 |
-| 5 | Backend: Event Types CRUD | 4 |
-| 6 | Backend: Slots endpoint | 4 |
-| 7 | Backend: Bookings endpoints | 4 |
-| 8 | Backend: Admin bookings | 4 |
-| 9 | Frontend scaffolding | 2 |
-| 10 | Orval кодогенерация | 2, 9 |
-| 11 | i18n строки | 9 |
-| 12 | Frontend: Layout + навигация | 9, 11 |
-| 13 | Frontend: Главная страница | 12 |
-| 14 | Frontend: Каталог типов событий | 10, 12 |
-| 15 | Frontend: Страница бронирования | 10, 12, 11 |
-| 16 | Frontend: Админка — предстоящие встречи | 10, 12 |
-| 17 | Frontend: Админка — CRUD типов событий | 10, 12 |
-| 18 | Frontend: Мои записи (LocalStorage) | 10, 12 |
-| 19 | ESLint настройка | 3, 9 |
-| 20 | E2E тесты (Playwright) | 5–8, 13–18 |
-| 21 | Docker | 5–8, 13–18 |
-| 22 | Lint cleanup (warnings) | 19, всё остальное |
+| 3 | Frontend scaffolding + Vite + Tailwind | 2 |
+| 4 | Orval кодогенерация | 3 |
+| 5 | Layout + Drawer-навигация + роутинг | 3 |
+| 6 | ESLint настройка | 3 |
+| 7 | Каталог типов событий (/booking) — верт. срез | 4, 5, 6 |
+| 8 | i18n строки | 3 |
+| 9 | Страница бронирования (/booking/:id) | 4, 5, 6, 8 |
+| 10 | Админка — предстоящие встречи (/admin) | 4, 5, 6, 8 |
+| 11 | Админка — CRUD типов событий | 4, 5, 6, 8 |
+| 12 | Мои записи (LocalStorage) | 4, 5, 6, 8 |
+| 13 | Главная страница (/) | 5, 6, 8 |
+
+### Этап 3: Backend
+
+| # | Задача | Зависит от |
+|---|--------|-----------|
+| 14 | Backend scaffolding | 2 |
+| 15 | DB schema (Drizzle) | 14 |
+| 16 | Backend: Event Types CRUD | 15 |
+| 17 | Backend: Slots endpoint | 15 |
+| 18 | Backend: Bookings endpoints | 15 |
+| 19 | Backend: Admin bookings | 15 |
+
+### Этап 4: Интеграция и финализация
+
+| # | Задача | Зависит от |
+|---|--------|-----------|
+| 20 | E2E тесты (Playwright) | 16–19, 7–13 |
+| 21 | Docker | 16–19, 7–13 |
+| 22 | Lint cleanup (warnings) | 6, всё остальное |
 
 ---
 
