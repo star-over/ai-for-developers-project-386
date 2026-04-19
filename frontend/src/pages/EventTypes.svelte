@@ -2,15 +2,18 @@
   import { goto } from '@mateothegreat/svelte5-router';
   import ArrowRightIcon from '@lucide/svelte/icons/arrow-right';
   import { createEventTypesList } from '$lib/api/default/default.js';
+  import type { EventType } from '$lib/api/model/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
   import { Badge } from '$lib/components/ui/badge/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
+  import { setSelectedEventType } from '$lib/stores/selectedEventType.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
   const query = createEventTypesList();
 
-  const navigate = ({ id }: { id: string }) => {
-    goto(`/booking/${id}`);
+  const navigate = ({ eventType }: { eventType: EventType }) => {
+    setSelectedEventType({ eventType });
+    goto(`/booking/${eventType.id}`);
   };
 </script>
 
@@ -35,7 +38,7 @@
         <button
           type="button"
           class="w-full text-left"
-          onclick={() => navigate({ id: eventType.id })}
+          onclick={() => navigate({ eventType })}
         >
           <Card.Root class="cursor-pointer transition-colors hover:bg-accent/50">
             <Card.Content class="flex min-h-[64px] items-center justify-between p-4">

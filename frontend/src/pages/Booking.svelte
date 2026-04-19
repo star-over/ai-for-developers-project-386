@@ -6,13 +6,20 @@
   import { Badge } from '$lib/components/ui/badge/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
+  import { getSelectedEventType } from '$lib/stores/selectedEventType.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
   let { route }: { route?: RouteResult } = $props();
 
   const eventTypeId = $derived(route?.result?.path?.params?.eventTypeId as string ?? '');
+
+  // Use store value saved when user clicked the event type card — stable across query refetches
+  const selectedEventType = $derived(getSelectedEventType());
+
+  // Also keep query for h1/badge display (falls back gracefully if store is set)
   const query = createEventTypesList();
-  const eventType = $derived(query.data?.data?.find((et) => et.id === eventTypeId));
+  const eventTypeFromQuery = $derived(query.data?.data?.find((et) => et.id === eventTypeId));
+  const displayEventType = $derived(selectedEventType ?? eventTypeFromQuery);
 
   let selectedSlot = $state<string | null>(null);
   let formOpen = $state(false);
@@ -45,10 +52,10 @@
 <div class="mx-auto max-w-lg p-4">
   {#if query.isPending}
     <div class="h-8 w-48 animate-pulse rounded bg-muted"></div>
-  {:else if eventType}
+  {:else if displayEventType}
     <div class="mb-6">
-      <h1 class="text-xl font-bold">{eventType.name}</h1>
-      <Badge variant="secondary" class="mt-1">{eventType.duration} мин</Badge>
+      <h1 class="text-xl font-bold">{displayEventType.name}</h1>
+      <Badge variant="secondary" class="mt-1">{displayEventType.duration} мин</Badge>
     </div>
   {/if}
 
@@ -58,13 +65,13 @@
 </div>
 
 {#snippet bookingSummary()}
-  {#if eventType && selectedSlot}
+  {#if displayEventType && selectedSlot}
     <div class="mx-4 my-2 rounded-lg bg-muted/50 px-4 py-3 text-sm">
-      <p class="font-medium">{eventType.name}</p>
+      <p class="font-medium">{displayEventType.name}</p>
       <p class="mt-1 text-muted-foreground">
         {formatSlotDate({ isoStr: selectedSlot })} · {formatSlotTime({ isoStr: selectedSlot })}
       </p>
-      <Badge variant="secondary" class="mt-2">{eventType.duration} мин</Badge>
+      <Badge variant="secondary" class="mt-2">{displayEventType.duration} мин</Badge>
     </div>
   {/if}
 {/snippet}
