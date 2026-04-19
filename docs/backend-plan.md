@@ -64,14 +64,14 @@ backend/
 - Create: `backend/src/app.ts`
 - Create: `backend/src/index.ts`
 
-- [ ] **Step 1: Инициализировать backend пакет**
+- [x] **Step 1: Инициализировать backend пакет**
 
 ```bash
 mkdir -p backend/src backend/data
 cd backend && npm init -y
 ```
 
-- [ ] **Step 2: Установить зависимости**
+- [x] **Step 2: Установить зависимости**
 
 > Без `@fastify/cors` — фронтенд подключается через Vite proxy.
 
@@ -80,7 +80,7 @@ cd backend && npm install fastify zod
 cd backend && npm install -D typescript tsx @types/node vitest
 ```
 
-- [ ] **Step 3: Создать tsconfig.json**
+- [x] **Step 3: Создать tsconfig.json**
 
 ```json
 {
@@ -99,7 +99,7 @@ cd backend && npm install -D typescript tsx @types/node vitest
 }
 ```
 
-- [ ] **Step 4: Создать backend/vitest.config.ts**
+- [x] **Step 4: Создать backend/vitest.config.ts**
 
 ```typescript
 import { defineConfig } from 'vitest/config';
@@ -111,7 +111,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 5: Создать backend/src/app.ts — фабрика Fastify**
+- [x] **Step 5: Создать backend/src/app.ts — фабрика Fastify**
 
 ```typescript
 import Fastify from 'fastify';
@@ -135,7 +135,7 @@ export const buildApp = ({ seed = false }: AppOptions = {}) => {
 };
 ```
 
-- [ ] **Step 6: Создать backend/src/index.ts — точка входа**
+- [x] **Step 6: Создать backend/src/index.ts — точка входа**
 
 ```typescript
 import { buildApp } from './app.js';
@@ -153,22 +153,9 @@ app.listen({ port, host: '0.0.0.0' }, (err, address) => {
 });
 ```
 
-- [ ] **Step 7: Добавить скрипты в package.json**
+- [x] ~~**Step 7: Добавить скрипты в package.json**~~ — УБРАН: скрипты не нужны, всё через Makefile
 
-В `backend/package.json` добавить:
-```json
-{
-  "type": "module",
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "test": "vitest run"
-  }
-}
-```
-
-- [ ] **Step 8: Запустить и проверить**
+- [x] **Step 8: Запустить и проверить**
 
 ```bash
 cd backend && npx tsx src/index.ts &
@@ -177,7 +164,7 @@ curl http://localhost:3000/api/health
 kill %1
 ```
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add backend/
@@ -197,7 +184,7 @@ git commit -m "feat: backend scaffolding with Fastify"
 > **Принцип:** Map<string, T> как хранилище. JSONL-файлы загружаются при старте сервера.
 > В тестах store создаётся пустым (seed: false).
 
-- [ ] **Step 1: Создать JSONL seed-файлы**
+- [x] **Step 1: Создать JSONL seed-файлы**
 
 `backend/data/event-types.jsonl` — по одному JSON-объекту на строку:
 
@@ -214,7 +201,7 @@ git commit -m "feat: backend scaffolding with Fastify"
 {"id":"bk-2","eventTypeId":"et-1","eventTypeName":"Quick Call","duration":10,"guestName":"Bob","guestEmail":"bob@example.com","startTime":"2026-04-21T14:00:00.000Z","endTime":"2026-04-21T14:30:00.000Z","createdAt":"2026-04-15T13:00:00.000Z"}
 ```
 
-- [ ] **Step 2: Создать backend/src/store.ts**
+- [x] **Step 2: Создать backend/src/store.ts**
 
 ```typescript
 import { readFileSync } from 'fs';
@@ -279,7 +266,7 @@ export const createStore = ({ seed = false }: { seed?: boolean } = {}): Store =>
 };
 ```
 
-- [ ] **Step 3: Написать тесты backend/tests/store.test.ts**
+- [x] **Step 3: Написать тесты backend/tests/store.test.ts**
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -313,13 +300,13 @@ describe('Store', () => {
 });
 ```
 
-- [ ] **Step 4: Запустить тесты**
+- [x] **Step 4: Запустить тесты**
 
 ```bash
 cd backend && npx vitest run tests/store.test.ts
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/
@@ -333,7 +320,7 @@ git commit -m "feat: in-memory store with JSONL seed data"
 **Files:**
 - Create: `backend/src/validation.ts`
 
-- [ ] **Step 1: Создать backend/src/validation.ts**
+- [x] **Step 1: Создать backend/src/validation.ts**
 
 ```typescript
 import { z } from 'zod';
@@ -365,7 +352,7 @@ export const SlotsQuerySchema = z.object({
 });
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add backend/
@@ -381,7 +368,7 @@ git commit -m "feat: Zod validation schemas for all endpoints"
 - Modify: `backend/src/app.ts`
 - Create: `backend/tests/event-types.test.ts`
 
-- [ ] **Step 1: Написать тесты backend/tests/event-types.test.ts**
+- [x] **Step 1: Написать тесты backend/tests/event-types.test.ts**
 
 ```typescript
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -463,7 +450,7 @@ describe('Event Types API', () => {
 });
 ```
 
-- [ ] **Step 2: Создать backend/src/routes/event-types.ts**
+- [x] **Step 2: Создать backend/src/routes/event-types.ts**
 
 > Работает с `app.store` (Map), не с БД.
 
@@ -525,7 +512,7 @@ export const eventTypesRoutes = async (app: FastifyInstance) => {
 };
 ```
 
-- [ ] **Step 3: Зарегистрировать в app.ts**
+- [x] **Step 3: Зарегистрировать в app.ts**
 
 ```typescript
 import { eventTypesRoutes } from './routes/event-types.js';
@@ -533,7 +520,7 @@ import { eventTypesRoutes } from './routes/event-types.js';
 app.register(eventTypesRoutes);
 ```
 
-- [ ] **Step 4: Запустить тесты**
+- [x] **Step 4: Запустить тесты**
 
 ```bash
 cd backend && npx vitest run tests/event-types.test.ts
@@ -541,7 +528,7 @@ cd backend && npx vitest run tests/event-types.test.ts
 
 Ожидаемый результат: все 6 тестов пройдены.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/
@@ -557,7 +544,7 @@ git commit -m "feat: Event Types CRUD API with Zod validation"
 - Modify: `backend/src/app.ts`
 - Create: `backend/tests/slots.test.ts`
 
-- [ ] **Step 1: Написать тесты backend/tests/slots.test.ts**
+- [x] **Step 1: Написать тесты backend/tests/slots.test.ts**
 
 ```typescript
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -648,7 +635,7 @@ describe('Slots API', () => {
 });
 ```
 
-- [ ] **Step 2: Создать backend/src/routes/slots.ts**
+- [x] **Step 2: Создать backend/src/routes/slots.ts**
 
 > Генерация 16 слотов (09:00–16:30), пометка занятых из Map bookings.
 
@@ -708,7 +695,7 @@ export const slotsRoutes = async (app: FastifyInstance) => {
 };
 ```
 
-- [ ] **Step 3: Зарегистрировать в app.ts**
+- [x] **Step 3: Зарегистрировать в app.ts**
 
 ```typescript
 import { slotsRoutes } from './routes/slots.js';
@@ -716,7 +703,7 @@ import { slotsRoutes } from './routes/slots.js';
 app.register(slotsRoutes);
 ```
 
-- [ ] **Step 4: Запустить тесты**
+- [x] **Step 4: Запустить тесты**
 
 ```bash
 cd backend && npx vitest run tests/slots.test.ts
@@ -724,7 +711,7 @@ cd backend && npx vitest run tests/slots.test.ts
 
 Ожидаемый результат: все 4 теста пройдены.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/
@@ -743,7 +730,7 @@ git commit -m "feat: Slots API with global occupancy check"
 > Ключевая бизнес-логика: денормализация (копируем eventTypeName, duration),
 > проверка конфликта слотов (409), валидация startTime (30-min boundary, рабочие часы, 14 дней).
 
-- [ ] **Step 1: Написать тесты backend/tests/bookings.test.ts**
+- [x] **Step 1: Написать тесты backend/tests/bookings.test.ts**
 
 ```typescript
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -900,7 +887,7 @@ describe('Bookings API', () => {
 });
 ```
 
-- [ ] **Step 2: Создать backend/src/routes/bookings.ts**
+- [x] **Step 2: Создать backend/src/routes/bookings.ts**
 
 > Конфликт слотов: проверяем Map bookings по startTime. Денормализация: копируем name и duration из eventType.
 
@@ -991,7 +978,7 @@ export const bookingsRoutes = async (app: FastifyInstance) => {
 };
 ```
 
-- [ ] **Step 3: Зарегистрировать в app.ts**
+- [x] **Step 3: Зарегистрировать в app.ts**
 
 ```typescript
 import { bookingsRoutes } from './routes/bookings.js';
@@ -999,7 +986,7 @@ import { bookingsRoutes } from './routes/bookings.js';
 app.register(bookingsRoutes);
 ```
 
-- [ ] **Step 4: Запустить тесты**
+- [x] **Step 4: Запустить тесты**
 
 ```bash
 cd backend && npx vitest run tests/bookings.test.ts
@@ -1007,7 +994,7 @@ cd backend && npx vitest run tests/bookings.test.ts
 
 Ожидаемый результат: все 8 тестов пройдены.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/
@@ -1023,7 +1010,7 @@ git commit -m "feat: Bookings API with slot conflict detection (409) and denorma
 - Modify: `backend/src/app.ts`
 - Create: `backend/tests/admin.test.ts`
 
-- [ ] **Step 1: Написать тесты backend/tests/admin.test.ts**
+- [x] **Step 1: Написать тесты backend/tests/admin.test.ts**
 
 ```typescript
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -1082,7 +1069,7 @@ describe('Admin Bookings API', () => {
 });
 ```
 
-- [ ] **Step 2: Создать backend/src/routes/admin.ts**
+- [x] **Step 2: Создать backend/src/routes/admin.ts**
 
 ```typescript
 import { FastifyInstance } from 'fastify';
@@ -1098,7 +1085,7 @@ export const adminRoutes = async (app: FastifyInstance) => {
 };
 ```
 
-- [ ] **Step 3: Зарегистрировать в app.ts**
+- [x] **Step 3: Зарегистрировать в app.ts**
 
 ```typescript
 import { adminRoutes } from './routes/admin.js';
@@ -1106,7 +1093,7 @@ import { adminRoutes } from './routes/admin.js';
 app.register(adminRoutes);
 ```
 
-- [ ] **Step 4: Запустить все бэкенд тесты**
+- [x] **Step 4: Запустить все бэкенд тесты**
 
 ```bash
 cd backend && npx vitest run
@@ -1114,7 +1101,7 @@ cd backend && npx vitest run
 
 Ожидаемый результат: все тесты пройдены (store + event-types + slots + bookings + admin).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/
@@ -1131,7 +1118,7 @@ git commit -m "feat: Admin bookings API sorted by startTime"
 > Фронтенд до этого работал с Prism mock-сервером. Теперь переключаем на реальный бэкенд
 > через Vite proxy — без CORS.
 
-- [ ] **Step 1: Добавить proxy в frontend/vite.config.ts**
+- [x] **Step 1: Добавить proxy в frontend/vite.config.ts**
 
 ```typescript
 // В defineConfig → server:
@@ -1145,7 +1132,7 @@ server: {
 },
 ```
 
-- [ ] **Step 2: Проверить интеграцию**
+- [x] **Step 2: Проверить интеграцию**
 
 Запустить бэкенд и фронтенд одновременно:
 
@@ -1163,7 +1150,7 @@ make dev-frontend
 - Можно создать новое бронирование
 - Админка показывает предстоящие встречи
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add frontend/
