@@ -4,6 +4,8 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
+  import UserIcon from '@lucide/svelte/icons/user';
+  import MailIcon from '@lucide/svelte/icons/mail';
   import { bookingSchema } from '$lib/validation/schemas.js';
   import { addBookingId } from '$lib/stores/bookings.svelte.js';
   import { getGuestProfile, saveGuestProfile } from '$lib/stores/guestProfile.svelte.js';
@@ -68,12 +70,15 @@
   {:else}
     <div class="flex flex-col gap-1">
       <Label for="guestName">{t.booking.form.name}</Label>
-      <Input
-        id="guestName"
-        bind:value={guestName}
-        placeholder={t.booking.form.namePlaceholder}
-        class={errors.guestName ? 'border-destructive' : ''}
-      />
+      <div class="relative">
+        <UserIcon class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          id="guestName"
+          bind:value={guestName}
+          placeholder={t.booking.form.namePlaceholder}
+          class="pl-9 {errors.guestName ? 'border-destructive' : ''}"
+        />
+      </div>
       {#if errors.guestName}
         <p class="text-xs text-destructive">{errors.guestName}</p>
       {/if}
@@ -81,13 +86,16 @@
 
     <div class="flex flex-col gap-1">
       <Label for="guestEmail">{t.booking.form.email}</Label>
-      <Input
-        id="guestEmail"
-        type="text"
-        bind:value={guestEmail}
-        placeholder={t.booking.form.emailPlaceholder}
-        class={errors.guestEmail ? 'border-destructive' : ''}
-      />
+      <div class="relative">
+        <MailIcon class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          id="guestEmail"
+          type="text"
+          bind:value={guestEmail}
+          placeholder={t.booking.form.emailPlaceholder}
+          class="pl-9 {errors.guestEmail ? 'border-destructive' : ''}"
+        />
+      </div>
       {#if errors.guestEmail}
         <p class="text-xs text-destructive">{errors.guestEmail}</p>
       {/if}

@@ -7,6 +7,8 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
   import { getSelectedEventType } from '$lib/stores/selectedEventType.svelte.js';
+  import BookingCardContent from '$lib/components/BookingCardContent.svelte';
+  import * as Card from '$lib/components/ui/card/index.js';
   import { t } from '$lib/i18n/index.js';
 
   let { route }: { route?: RouteResult } = $props();
@@ -42,11 +44,6 @@
     selectedSlot = null;
   };
 
-  const formatSlotDate = ({ isoStr }: { isoStr: string }) =>
-    new Date(isoStr).toLocaleDateString('ru', { day: 'numeric', month: 'long', year: 'numeric' });
-
-  const formatSlotTime = ({ isoStr }: { isoStr: string }) =>
-    new Date(isoStr).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
 </script>
 
 <div class="mx-auto max-w-lg p-4">
@@ -66,13 +63,15 @@
 
 {#snippet bookingSummary()}
   {#if displayEventType && selectedSlot}
-    <div class="mx-4 my-2 rounded-lg bg-muted/50 px-4 py-3 text-sm">
-      <p class="font-medium">{displayEventType.name}</p>
-      <p class="mt-1 text-muted-foreground">
-        {formatSlotDate({ isoStr: selectedSlot })} · {formatSlotTime({ isoStr: selectedSlot })}
-      </p>
-      <Badge variant="secondary" class="mt-2">{displayEventType.duration} мин</Badge>
-    </div>
+    <Card.Root class="mx-4 my-2">
+      <Card.Content class="p-4">
+        <BookingCardContent
+          eventTypeName={displayEventType.name}
+          startTime={selectedSlot}
+          duration={displayEventType.duration}
+        />
+      </Card.Content>
+    </Card.Root>
   {/if}
 {/snippet}
 
