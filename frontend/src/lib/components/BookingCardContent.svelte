@@ -95,7 +95,7 @@
 
   <!-- Action slot -->
   {#if actions}
-    <div class="shrink-0 self-center">
+    <div class="shrink-0 self-start">
       {@render actions()}
     </div>
   {/if}
