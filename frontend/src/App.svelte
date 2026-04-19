@@ -13,9 +13,9 @@
   const routes = [
     { path: '/', component: Home },
     { path: '/booking', component: EventTypes },
-    { path: '/booking/:eventTypeId', component: Booking },
     { path: '/admin', component: AdminBookings },
     { path: '/admin/event-types', component: AdminEventTypes },
+    { path: /^\/booking\/(?<eventTypeId>[^/]+)$/, component: Booking },
   ];
 </script>
 

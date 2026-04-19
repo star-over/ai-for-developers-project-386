@@ -9,7 +9,7 @@
 
   let { id, onCanceled }: { id: string; onCanceled: () => void } = $props();
 
-  const bookingQuery = createByIdGet(id);
+  const bookingQuery = createByIdGet(() => id);
   const cancelMutation = createByIdCancel();
   let dialogOpen = $state(false);
 

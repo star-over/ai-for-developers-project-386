@@ -23,7 +23,7 @@
   let selectedSlot = $state<string | null>(null);
 
   const query = $derived(
-    createSlotsList({ date: selectedDate, eventTypeId }),
+    createSlotsList(() => ({ date: selectedDate, eventTypeId })),
   );
 
   const formatTime = ({ isoStr }: { isoStr: string }) => {
