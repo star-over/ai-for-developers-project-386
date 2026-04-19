@@ -54,10 +54,10 @@
 
 {#snippet navContent()}
   <div class="flex h-full flex-col">
-    <div class="px-4 py-3">
-      <span class="text-lg font-semibold">{t.nav.brand}</span>
+    <div class="flex h-12 items-center border-b px-4">
+      <span class="text-sm font-semibold text-muted-foreground">{t.nav.brand}</span>
     </div>
-    <nav class="flex flex-col gap-1 px-2">
+    <nav class="mt-2 flex flex-col gap-1 px-2">
       {#each navLinks as link (link.path)}
         <button
           type="button"
