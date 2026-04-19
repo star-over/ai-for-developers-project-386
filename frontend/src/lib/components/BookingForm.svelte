@@ -45,7 +45,7 @@
           saveGuestProfile({ name: guestName, email: guestEmail });
           addBookingId({ id: response.data.id });
           success = true;
-          setTimeout(() => goto('/booking'), 1500);
+          setTimeout(() => goto('/'), 1500);
         },
         onError: (err) => {
           const status = (err as { status?: number }).status;
