@@ -1,13 +1,12 @@
 import { FastifyInstance } from 'fastify';
 import { SlotsQuerySchema } from '../validation.js';
-import type { Store } from '../store.js';
 
 const SLOT_DURATION = 30;
 const WORK_START_HOUR = 9;
 const WORK_END_HOUR = 17;
 
 export const slotsRoutes = async (app: FastifyInstance) => {
-  const { store } = app as any as { store: Store };
+  const { store } = app;
 
   app.get('/api/slots', async (request, reply) => {
     const parsed = SlotsQuerySchema.safeParse(request.query);

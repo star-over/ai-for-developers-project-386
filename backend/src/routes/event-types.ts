@@ -1,10 +1,10 @@
 import { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
 import { CreateEventTypeSchema, UpdateEventTypeSchema } from '../validation.js';
-import type { EventType, Store } from '../store.js';
+import type { EventType } from '../store.js';
 
 export const eventTypesRoutes = async (app: FastifyInstance) => {
-  const { store } = app as any as { store: Store };
+  const { store } = app;
 
   app.get('/api/event-types', async () => {
     return Array.from(store.eventTypes.values());
@@ -39,7 +39,7 @@ export const eventTypesRoutes = async (app: FastifyInstance) => {
       return reply.status(400).send({ message: parsed.error.issues[0].message });
     }
 
-    const updated = { ...existing, ...parsed.data };
+    const updated = { ...existing, ...parsed.data } as EventType;
     store.eventTypes.set(id, updated);
     return reply.send(updated);
   });

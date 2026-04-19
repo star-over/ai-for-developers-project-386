@@ -1,14 +1,14 @@
 import { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
 import { CreateBookingSchema } from '../validation.js';
-import type { Store, Booking } from '../store.js';
+import type { Booking } from '../store.js';
 
 const SLOT_DURATION = 30;
 const WORK_START_HOUR = 9;
 const WORK_END_HOUR = 17;
 
 export const bookingsRoutes = async (app: FastifyInstance) => {
-  const { store } = app as any as { store: Store };
+  const { store } = app;
 
   app.post('/api/bookings', async (request, reply) => {
     const parsed = CreateBookingSchema.safeParse(request.body);

@@ -32,7 +32,9 @@ export default [
     ignores: [
       'node_modules/**',
       'frontend/node_modules/**',
+      'backend/node_modules/**',
       'frontend/dist/**',
+      'frontend/.vite/**',
       'frontend/src/lib/api/**',
       'spec/tsp-output/**',
       '.agents/**',

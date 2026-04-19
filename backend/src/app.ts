@@ -1,5 +1,11 @@
 import Fastify from 'fastify';
-import { createStore } from './store.js';
+import { createStore, Store } from './store.js';
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    store: Store;
+  }
+}
 import { eventTypesRoutes } from './routes/event-types.js';
 import { slotsRoutes } from './routes/slots.js';
 import { bookingsRoutes } from './routes/bookings.js';

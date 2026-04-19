@@ -27,7 +27,7 @@ describe('Slots API', () => {
     expect(slots).toHaveLength(16);
     expect(slots[0].startTime).toContain('09:00');
     expect(slots[15].startTime).toContain('16:30');
-    expect(slots.every((s: any) => s.available === true)).toBe(true);
+    expect(slots.every((s: { available: boolean }) => s.available === true)).toBe(true);
   });
 
   it('booked slot shows as unavailable', async () => {
@@ -47,7 +47,7 @@ describe('Slots API', () => {
       url: `/api/slots?date=2026-04-20&eventTypeId=${eventTypeId}`,
     });
     const slots = res.json();
-    const slot0900 = slots.find((s: any) => s.startTime.includes('09:00'));
+    const slot0900 = slots.find((s: { startTime: string }) => s.startTime.includes('09:00'));
     expect(slot0900.available).toBe(false);
   });
 
@@ -75,7 +75,7 @@ describe('Slots API', () => {
       url: `/api/slots?date=2026-04-20&eventTypeId=${eventTypeId}`,
     });
     const slots = res.json();
-    const slot1000 = slots.find((s: any) => s.startTime.includes('10:00'));
+    const slot1000 = slots.find((s: { startTime: string }) => s.startTime.includes('10:00'));
     expect(slot1000.available).toBe(false);
   });
 

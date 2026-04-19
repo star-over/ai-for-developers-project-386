@@ -57,9 +57,11 @@ make dev-backend   # Fastify dev server
 make dev-frontend  # Vite dev server
 make lint          # ESLint check
 make lint-fix      # ESLint autofix
-make typecheck     # TypeScript type check (svelte-check)
+make typecheck     # TypeScript type check (svelte-check, frontend)
+make typecheck-backend  # TypeScript type check (tsc --noEmit, backend)
 make test          # Vitest (frontend + backend)
 make test-e2e      # Playwright e2e
+make precommit     # lint + typecheck (frontend + backend) + test
 ```
 
 ## Linting Policy
@@ -77,6 +79,7 @@ make test-e2e      # Playwright e2e
 
 - Work directly on `master` — no feature branches
 - Restart dev-server after any git operations that change files
+- Always use `/caveman-commit` for commit messages
 
 ## CI
 
