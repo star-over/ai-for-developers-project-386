@@ -13,12 +13,25 @@
   let { children } = $props();
 
   let open = $state(false);
+  let currentPath = $state(window.location.pathname);
 
-  const currentPath = $derived(window.location.pathname);
+  $effect(() => {
+    const onPopState = () => { currentPath = window.location.pathname; };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  });
 
   const navigate = ({ path }: { path: string }) => {
     open = false;
     goto(path);
+    currentPath = path;
+  };
+
+  const isActive = ({ path }: { path: string }) => {
+    if (currentPath === path) return true;
+    // /booking matches sub-routes like /booking/:id
+    if (path === '/booking') return currentPath.startsWith('/booking/');
+    return false;
   };
 
   const navLinks = [
@@ -63,7 +76,7 @@
           type="button"
           class={cn(
             'flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors hover:bg-accent',
-            currentPath === link.path && 'bg-accent font-medium',
+            isActive({ path: link.path }) && 'bg-accent font-medium',
           )}
           onclick={() => navigate({ path: link.path })}
         >
@@ -79,7 +92,7 @@
           type="button"
           class={cn(
             'flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors hover:bg-accent',
-            currentPath === link.path && 'bg-accent font-medium',
+            isActive({ path: link.path }) && 'bg-accent font-medium',
           )}
           onclick={() => navigate({ path: link.path })}
         >
