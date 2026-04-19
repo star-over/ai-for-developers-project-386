@@ -202,7 +202,7 @@
           {/snippet}
         </Dialog.Close>
         <Button onclick={handleSave} disabled={isPending}>
-          {isPending ? t.common.loading : t.admin.eventTypes.form.save}
+          {isPending ? t.common.loading : editingId ? t.admin.eventTypes.form.save : t.admin.eventTypes.create}
         </Button>
       </Dialog.Footer>
     </Dialog.Content>
@@ -223,7 +223,7 @@
           {/snippet}
         </Sheet.Close>
         <Button onclick={handleSave} disabled={isPending}>
-          {isPending ? t.common.loading : t.admin.eventTypes.form.save}
+          {isPending ? t.common.loading : editingId ? t.admin.eventTypes.form.save : t.admin.eventTypes.create}
         </Button>
       </Sheet.Footer>
     </Sheet.Content>
