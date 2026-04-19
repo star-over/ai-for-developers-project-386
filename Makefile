@@ -9,7 +9,7 @@ api-generate:
 generate: spec-build api-generate
 
 mock:
-	npx @stoplight/prism-cli mock spec/tsp-output/@typespec/openapi3/openapi.yaml --port 4010
+	npx @stoplight/prism-cli mock spec/tsp-output/@typespec/openapi3/openapi.yaml --port 4010 --dynamic
 
 lint:
 	npx eslint .
