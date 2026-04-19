@@ -1,0 +1,382 @@
+openapi: 3.0.0
+info:
+  title: Calendar Booking API
+  version: 0.0.0
+tags: []
+paths:
+  /api/admin/bookings:
+    get:
+      operationId: AdminBookings_list
+      description: List all upcoming bookings sorted by startTime ascending
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+  /api/bookings:
+    post:
+      operationId: Bookings_create
+      description: Create a booking. Returns 409 if slot is already taken, 404 if eventType not found.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+  /api/bookings/{id}:
+    get:
+      operationId: ById_get
+      description: Get booking details by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      operationId: ById_cancel
+      description: Cancel (delete) a booking by ID. Physically removes the record.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/event-types:
+    get:
+      operationId: EventTypes_list
+      description: List all event types
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventType'
+    post:
+      operationId: EventTypes_create
+      description: Create a new event type
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventTypeRequest'
+  /api/event-types/{id}:
+    patch:
+      operationId: ById_update
+      description: Partially update an event type by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEventTypeRequest'
+    delete:
+      operationId: ById_delete
+      description: Delete an event type by ID. Existing bookings are preserved (denormalized).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/slots:
+    get:
+      operationId: Slots_list
+      description: 'Get slots for a specific date and event type. Date format: YYYY-MM-DD. Returns all 30-min slots within working hours with availability status.'
+      parameters:
+        - name: date
+          in: query
+          required: true
+          description: Date in YYYY-MM-DD format, must be within 14 days from today
+          schema:
+            type: string
+          explode: false
+        - name: eventTypeId
+          in: query
+          required: true
+          description: Event type ID — used to validate existence and provide context
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Slot'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Booking:
+      type: object
+      required:
+        - id
+        - eventTypeId
+        - eventTypeName
+        - duration
+        - guestName
+        - guestEmail
+        - startTime
+        - endTime
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Unique identifier (UUID v4)
+        eventTypeId:
+          type: string
+          description: ID of the event type at the time of booking (not a FK)
+        eventTypeName:
+          type: string
+          description: Name of the event type, copied at creation time
+        duration:
+          allOf:
+            - $ref: '#/components/schemas/Duration'
+          description: Meeting duration in minutes, copied at creation time
+        guestName:
+          type: string
+          description: Guest's name
+        guestEmail:
+          type: string
+          description: Guest's email address
+        startTime:
+          type: string
+          format: date-time
+          description: Start of the 30-min slot in UTC. Must be on a 30-min boundary within working hours (09:00–16:30)
+        endTime:
+          type: string
+          format: date-time
+          description: End of the 30-min slot (startTime + 30 min)
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp in UTC ISO 8601
+      description: A booking made by a guest. Event type data (eventTypeName, duration) is denormalized — copied at creation time so bookings remain self-contained even if the event type is later modified or deleted.
+    CreateBookingRequest:
+      type: object
+      required:
+        - eventTypeId
+        - guestName
+        - guestEmail
+        - startTime
+      properties:
+        eventTypeId:
+          type: string
+          description: ID of the event type to book
+        guestName:
+          type: string
+          minLength: 1
+          description: Guest's name, must not be empty
+        guestEmail:
+          type: string
+          description: Guest's email, must be a valid email address
+        startTime:
+          type: string
+          format: date-time
+          description: Desired slot start time in UTC. Must be 30-min aligned, within 09:00–16:30, within 14 days from now
+      description: Request body for creating a booking. Backend looks up eventType to populate denormalized fields.
+    CreateEventTypeRequest:
+      type: object
+      required:
+        - name
+        - duration
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: Display name, must not be empty
+        duration:
+          allOf:
+            - $ref: '#/components/schemas/Duration'
+          description: 'Meeting duration: 10, 15, 20, or 30 minutes'
+      description: Request body for creating a new event type
+    Duration:
+      type: number
+      enum:
+        - 10
+        - 15
+        - 20
+        - 30
+      description: Meeting duration in minutes. Meetings shorter than 30 min still occupy a full 30-min slot.
+    ErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Human-readable error description
+      description: Standard error response returned for 400, 404, 409 errors
+    EventType:
+      type: object
+      required:
+        - id
+        - name
+        - duration
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Unique identifier (UUID v4)
+        name:
+          type: string
+          minLength: 1
+          description: Display name of the event type, shown to guests
+        duration:
+          allOf:
+            - $ref: '#/components/schemas/Duration'
+          description: Duration of the meeting in minutes
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp in UTC ISO 8601
+      description: Type of event that guests can book. Created and managed by the calendar owner.
+    Slot:
+      type: object
+      required:
+        - startTime
+        - endTime
+        - available
+      properties:
+        startTime:
+          type: string
+          format: date-time
+          description: Slot start time in UTC
+        endTime:
+          type: string
+          format: date-time
+          description: Slot end time in UTC (startTime + 30 min)
+        available:
+          type: boolean
+          description: true if slot is free for booking, false if already taken
+      description: A 30-minute time slot. Availability is global — a slot occupied by any event type is unavailable for all.
+    UpdateEventTypeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: New display name, must not be empty if provided
+        duration:
+          allOf:
+            - $ref: '#/components/schemas/Duration'
+          description: New duration in minutes
+      description: Request body for partial update of an event type
+servers:
+  - url: http://localhost:3000
+    description: Development server
+    variables: {}

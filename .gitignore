@@ -13,9 +13,6 @@ data/
 *.sqlite
 *.sqlite3
 
-# TypeSpec output
-spec/tsp-output/
-
 # Orval generated
 frontend/src/lib/api/endpoints.ts
 
