@@ -24,6 +24,11 @@ frontend/src/lib/api/endpoints.ts
 .env.local
 .env.*.local
 
+# AI agents
+.agents/
+.claude/
+.qwen/
+
 # IDE
 .vscode/
 .idea/
