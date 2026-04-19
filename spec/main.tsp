@@ -1,9 +1,11 @@
 import "@typespec/http";
 import "@typespec/rest";
 import "@typespec/openapi3";
+import "@typespec/openapi";
 
 using TypeSpec.Http;
 using TypeSpec.Rest;
+using TypeSpec.OpenAPI;
 
 @service(#{
   title: "Calendar Booking API",
@@ -22,47 +24,53 @@ union Duration {
 }
 
 @doc("Type of event that guests can book. Created and managed by the calendar owner.")
+@extension("additionalProperties", false)
 model EventType {
-  @doc("Unique identifier (UUID v4)") id: string;
+  @doc("Unique identifier (UUID v4)") @format("uuid") id: string;
   @doc("Display name of the event type, shown to guests") @minLength(1) name: string;
   @doc("Duration of the meeting in minutes") duration: Duration;
   @doc("Creation timestamp in UTC ISO 8601") createdAt: utcDateTime;
 }
 
 @doc("Request body for creating a new event type")
+@extension("additionalProperties", false)
 model CreateEventTypeRequest {
   @doc("Display name, must not be empty") @minLength(1) name: string;
   @doc("Meeting duration: 10, 15, 20, or 30 minutes") duration: Duration;
 }
 
 @doc("Request body for partial update of an event type")
+@extension("additionalProperties", false)
 model UpdateEventTypeRequest {
   @doc("New display name, must not be empty if provided") @minLength(1) name?: string;
   @doc("New duration in minutes") duration?: Duration;
 }
 
 @doc("A booking made by a guest. Event type data (eventTypeName, duration) is denormalized — copied at creation time so bookings remain self-contained even if the event type is later modified or deleted.")
+@extension("additionalProperties", false)
 model Booking {
-  @doc("Unique identifier (UUID v4)") id: string;
-  @doc("ID of the event type at the time of booking (not a FK)") eventTypeId: string;
+  @doc("Unique identifier (UUID v4)") @format("uuid") id: string;
+  @doc("ID of the event type at the time of booking (not a FK)") @format("uuid") eventTypeId: string;
   @doc("Name of the event type, copied at creation time") eventTypeName: string;
   @doc("Meeting duration in minutes, copied at creation time") duration: Duration;
   @doc("Guest's name") guestName: string;
-  @doc("Guest's email address") guestEmail: string;
+  @doc("Guest's email address") @format("email") guestEmail: string;
   @doc("Start of the 30-min slot in UTC. Must be on a 30-min boundary within working hours (09:00–16:30)") startTime: utcDateTime;
   @doc("End of the 30-min slot (startTime + 30 min)") endTime: utcDateTime;
   @doc("Creation timestamp in UTC ISO 8601") createdAt: utcDateTime;
 }
 
 @doc("Request body for creating a booking. Backend looks up eventType to populate denormalized fields.")
+@extension("additionalProperties", false)
 model CreateBookingRequest {
-  @doc("ID of the event type to book") eventTypeId: string;
+  @doc("ID of the event type to book") @format("uuid") eventTypeId: string;
   @doc("Guest's name, must not be empty") @minLength(1) guestName: string;
-  @doc("Guest's email, must be a valid email address") guestEmail: string;
+  @doc("Guest's email, must be a valid email address") @format("email") guestEmail: string;
   @doc("Desired slot start time in UTC. Must be 30-min aligned, within 09:00–16:30, within 14 days from now") startTime: utcDateTime;
 }
 
 @doc("A 30-minute time slot. Availability is global — a slot occupied by any event type is unavailable for all.")
+@extension("additionalProperties", false)
 model Slot {
   @doc("Slot start time in UTC") startTime: utcDateTime;
   @doc("Slot end time in UTC (startTime + 30 min)") endTime: utcDateTime;
@@ -70,6 +78,7 @@ model Slot {
 }
 
 @doc("Standard error response returned for 400, 404, 409 errors")
+@extension("additionalProperties", false)
 model ErrorResponse {
   @doc("Human-readable error description") message: string;
 }

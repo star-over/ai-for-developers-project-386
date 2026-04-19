@@ -236,9 +236,11 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           description: Unique identifier (UUID v4)
         eventTypeId:
           type: string
+          format: uuid
           description: ID of the event type at the time of booking (not a FK)
         eventTypeName:
           type: string
@@ -252,6 +254,7 @@ components:
           description: Guest's name
         guestEmail:
           type: string
+          format: email
           description: Guest's email address
         startTime:
           type: string
@@ -266,6 +269,7 @@ components:
           format: date-time
           description: Creation timestamp in UTC ISO 8601
       description: A booking made by a guest. Event type data (eventTypeName, duration) is denormalized — copied at creation time so bookings remain self-contained even if the event type is later modified or deleted.
+      additionalProperties: false
     CreateBookingRequest:
       type: object
       required:
@@ -276,6 +280,7 @@ components:
       properties:
         eventTypeId:
           type: string
+          format: uuid
           description: ID of the event type to book
         guestName:
           type: string
@@ -283,12 +288,14 @@ components:
           description: Guest's name, must not be empty
         guestEmail:
           type: string
+          format: email
           description: Guest's email, must be a valid email address
         startTime:
           type: string
           format: date-time
           description: Desired slot start time in UTC. Must be 30-min aligned, within 09:00–16:30, within 14 days from now
       description: Request body for creating a booking. Backend looks up eventType to populate denormalized fields.
+      additionalProperties: false
     CreateEventTypeRequest:
       type: object
       required:
@@ -304,6 +311,7 @@ components:
             - $ref: '#/components/schemas/Duration'
           description: 'Meeting duration: 10, 15, 20, or 30 minutes'
       description: Request body for creating a new event type
+      additionalProperties: false
     Duration:
       type: number
       enum:
@@ -321,6 +329,7 @@ components:
           type: string
           description: Human-readable error description
       description: Standard error response returned for 400, 404, 409 errors
+      additionalProperties: false
     EventType:
       type: object
       required:
@@ -331,6 +340,7 @@ components:
       properties:
         id:
           type: string
+          format: uuid
           description: Unique identifier (UUID v4)
         name:
           type: string
@@ -345,6 +355,7 @@ components:
           format: date-time
           description: Creation timestamp in UTC ISO 8601
       description: Type of event that guests can book. Created and managed by the calendar owner.
+      additionalProperties: false
     Slot:
       type: object
       required:
@@ -364,6 +375,7 @@ components:
           type: boolean
           description: true if slot is free for booking, false if already taken
       description: A 30-minute time slot. Availability is global — a slot occupied by any event type is unavailable for all.
+      additionalProperties: false
     UpdateEventTypeRequest:
       type: object
       properties:
@@ -376,6 +388,7 @@ components:
             - $ref: '#/components/schemas/Duration'
           description: New duration in minutes
       description: Request body for partial update of an event type
+      additionalProperties: false
 servers:
   - url: http://localhost:3000
     description: Development server
