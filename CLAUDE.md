@@ -48,6 +48,8 @@ Makefile        # Команды сборки, генерации, тестов
 
 ## Key Commands
 
+**Always use `make` — never `npm run` directly.**
+
 ```bash
 make generate      # TypeSpec → OpenAPI → Orval хуки
 make mock          # Prism mock-сервер
@@ -69,6 +71,11 @@ make test-e2e      # Playwright e2e
 
 - New functions: `const fx = (props) => {}` with call `fx({ var1, var2 })` — named params via object for AI-agent readability
 - ESLint: warn level, not blocking. Apply after working code is ready
+
+## Git Workflow
+
+- Work directly on `master` — no feature branches
+- Restart dev-server after any git operations that change files
 
 ## CI
 
