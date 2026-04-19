@@ -5,7 +5,7 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import { bookingSchema } from '$lib/validation/schemas.js';
-  import { addBookingId } from '$lib/stores/bookings.js';
+  import { addBookingId } from '$lib/stores/bookings.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
   let { eventTypeId, startTime }: {
@@ -35,7 +35,7 @@
       return;
     }
 
-    $mutation.mutate(
+    mutation.mutate(
       { data: { eventTypeId, startTime, guestName, guestEmail } },
       {
         onSuccess: (response) => {
@@ -93,8 +93,8 @@
       <p class="text-sm text-destructive">{serverError}</p>
     {/if}
 
-    <Button type="submit" disabled={$mutation.isPending}>
-      {$mutation.isPending ? t.common.loading : t.booking.form.submit}
+    <Button type="submit" disabled={mutation.isPending}>
+      {mutation.isPending ? t.common.loading : t.booking.form.submit}
     </Button>
   {/if}
 </form>

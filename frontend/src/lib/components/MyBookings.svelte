@@ -1,6 +1,6 @@
 <script lang="ts">
   import BookingCard from '$lib/components/BookingCard.svelte';
-  import { getBookingIds } from '$lib/stores/bookings.js';
+  import { getBookingIds } from '$lib/stores/bookings.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
   const ids = $derived(getBookingIds());

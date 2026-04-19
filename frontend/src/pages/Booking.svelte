@@ -12,14 +12,14 @@
   const query = createEventTypesList();
 
   const eventType = $derived(
-    $query.data?.data?.find((et) => et.id === eventTypeId),
+    query.data?.data?.find((et) => et.id === eventTypeId),
   );
 
   let selectedSlot = $state<string | null>(null);
 </script>
 
 <div class="mx-auto max-w-lg p-4">
-  {#if $query.isPending}
+  {#if query.isPending}
     <div class="h-8 w-48 animate-pulse rounded bg-muted"></div>
   {:else if eventType}
     <div class="mb-6">

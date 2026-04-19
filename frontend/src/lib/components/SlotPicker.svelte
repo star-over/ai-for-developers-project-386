@@ -63,19 +63,19 @@
   <!-- Slot grid -->
   <p class="mb-2 text-sm font-medium text-muted-foreground">{t.booking.selectSlot}</p>
 
-  {#if $query.isPending}
+  {#if query.isPending}
     <div class="grid grid-cols-3 gap-2">
       {#each [1, 2, 3, 4, 5, 6] as i (i)}
         <div class="h-10 animate-pulse rounded-md bg-muted"></div>
       {/each}
     </div>
-  {:else if $query.isError}
+  {:else if query.isError}
     <p class="text-sm text-destructive">{t.common.error}</p>
-  {:else if !$query.data?.data || $query.data.data.length === 0}
+  {:else if !query.data?.data || query.data.data.length === 0}
     <p class="text-sm text-muted-foreground">Нет доступных слотов</p>
   {:else}
     <div class="grid grid-cols-3 gap-2">
-      {#each $query.data.data as slot (slot.startTime)}
+      {#each query.data.data as slot (slot.startTime)}
         <Button
           variant={selectedSlot === slot.startTime ? 'default' : 'outline'}
           disabled={!slot.available}

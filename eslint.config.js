@@ -19,8 +19,9 @@ export default [
     },
   },
   {
-    files: ['**/*.ts', '**/*.js'],
+    files: ['**/*.ts', '**/*.js', '**/*.svelte.ts', '**/*.svelte.js'],
     languageOptions: {
+      parser: ts.parser,
       globals: {
         ...globals.browser,
         ...globals.node,

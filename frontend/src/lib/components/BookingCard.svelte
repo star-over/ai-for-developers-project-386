@@ -4,7 +4,7 @@
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Badge } from '$lib/components/ui/badge/index.js';
-  import { removeBookingId } from '$lib/stores/bookings.js';
+  import { removeBookingId } from '$lib/stores/bookings.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
   let { id, onCanceled }: { id: string; onCanceled: () => void } = $props();
@@ -22,14 +22,14 @@
   };
 
   $effect(() => {
-    if ($bookingQuery.isError) {
+    if (bookingQuery.isError) {
       removeBookingId({ id });
     }
   });
 </script>
 
-{#if $bookingQuery.isSuccess && $bookingQuery.data?.data}
-  {@const booking = $bookingQuery.data.data}
+{#if bookingQuery.isSuccess && bookingQuery.data?.data}
+  {@const booking = bookingQuery.data.data}
   <Card.Root>
     <Card.Content class="p-4">
       <div class="flex items-start justify-between gap-2">
@@ -62,9 +62,9 @@
         </Button>
         <Button
           variant="destructive"
-          disabled={$cancelMutation.isPending}
+          disabled={cancelMutation.isPending}
           onclick={() => {
-            $cancelMutation.mutate({ id }, {
+            cancelMutation.mutate({ id }, {
               onSuccess: () => {
                 dialogOpen = false;
                 removeBookingId({ id });
