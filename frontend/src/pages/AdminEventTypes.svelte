@@ -11,8 +11,8 @@
   import * as Sheet from '$lib/components/ui/sheet/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
-  import { Badge } from '$lib/components/ui/badge/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
+  import EventTypeCardContent from '$lib/components/EventTypeCardContent.svelte';
   import { Label } from '$lib/components/ui/label/index.js';
   import { eventTypeSchema } from '$lib/validation/schemas.js';
   import { t } from '$lib/i18n/index.js';
@@ -118,24 +118,24 @@
     <div class="flex flex-col gap-3">
       {#each query.data.data as et (et.id)}
         <Card.Root>
-          <Card.Content class="flex min-h-[64px] items-center justify-between p-4">
-            <div>
-              <p class="font-medium">{et.name}</p>
-              <Badge variant="secondary" class="mt-1">{et.duration} мин</Badge>
-            </div>
-            <div class="flex gap-2">
-              <Button variant="outline" size="sm" onclick={() => openEdit({ et })}>
-                {t.admin.eventTypes.edit}
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                class="text-destructive hover:text-destructive"
-                onclick={() => { deleteTarget = et; }}
-              >
-                {t.admin.eventTypes.delete}
-              </Button>
-            </div>
+          <Card.Content class="p-4">
+            <EventTypeCardContent name={et.name} duration={et.duration}>
+              {#snippet actions()}
+                <div class="flex gap-2">
+                  <Button variant="outline" size="sm" onclick={() => openEdit({ et })}>
+                    {t.admin.eventTypes.edit}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    class="text-destructive hover:text-destructive"
+                    onclick={() => { deleteTarget = et; }}
+                  >
+                    {t.admin.eventTypes.delete}
+                  </Button>
+                </div>
+              {/snippet}
+            </EventTypeCardContent>
           </Card.Content>
         </Card.Root>
       {/each}
