@@ -27,13 +27,6 @@
     currentPath = path;
   };
 
-  const isActive = ({ path }: { path: string }) => {
-    if (currentPath === path) return true;
-    // /booking matches sub-routes like /booking/:id
-    if (path === '/booking') return currentPath.startsWith('/booking/');
-    return false;
-  };
-
   const navLinks = [
     { path: '/', label: t.nav.home, icon: HomeIcon },
     { path: '/booking', label: t.nav.booking, icon: CalendarIcon },
@@ -43,33 +36,19 @@
     { path: '/admin', label: t.nav.adminBookings, icon: ListIcon },
     { path: '/admin/event-types', label: t.nav.adminEventTypes, icon: SettingsIcon },
   ];
+
+  const isActive = ({ path }: { path: string }) => {
+    if (currentPath === path) return true;
+    if (path === '/booking') return currentPath.startsWith('/booking/');
+    return false;
+  };
 </script>
 
-<Sheet.Root bind:open>
-  <div class="flex min-h-screen flex-col">
-    <!-- Top bar -->
-    <header class="sticky top-0 z-50 flex h-12 items-center border-b bg-background px-4">
-      <Sheet.Trigger
-        class="inline-flex h-11 w-11 items-center justify-center rounded-md hover:bg-accent"
-        aria-label="Открыть меню"
-      >
-        <MenuIcon class="h-5 w-5" />
-      </Sheet.Trigger>
-      <span class="ml-3 text-lg font-semibold">{t.nav.brand}</span>
-    </header>
-
-    <!-- Page content -->
-    <main class="flex-1">
-      {@render children()}
-    </main>
-  </div>
-
-  <!-- Drawer -->
-  <Sheet.Content side="left" class="w-64 p-0">
-    <Sheet.Header class="px-4 py-3">
-      <Sheet.Title class="text-lg font-semibold">{t.nav.brand}</Sheet.Title>
-    </Sheet.Header>
-
+{#snippet navContent()}
+  <div class="flex h-full flex-col">
+    <div class="px-4 py-3">
+      <span class="text-lg font-semibold">{t.nav.brand}</span>
+    </div>
     <nav class="flex flex-col gap-1 px-2">
       {#each navLinks as link (link.path)}
         <button
@@ -101,5 +80,35 @@
         </button>
       {/each}
     </nav>
+  </div>
+{/snippet}
+
+<!-- Fixed sidebar — visible on lg+ -->
+<aside class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:flex lg:w-64 lg:flex-col lg:border-r lg:bg-background">
+  {@render navContent()}
+</aside>
+
+<!-- Mobile sheet drawer -->
+<Sheet.Root bind:open>
+  <Sheet.Content side="left" class="w-64 p-0">
+    {@render navContent()}
   </Sheet.Content>
+
+  <!-- Main layout -->
+  <div class="flex min-h-screen flex-col lg:ml-64">
+    <header class="sticky top-0 z-40 flex h-12 items-center border-b bg-background px-4">
+      <!-- Hamburger: hidden when sidebar is fixed -->
+      <Sheet.Trigger
+        class="inline-flex h-11 w-11 items-center justify-center rounded-md hover:bg-accent lg:hidden"
+        aria-label="Открыть меню"
+      >
+        <MenuIcon class="h-5 w-5" />
+      </Sheet.Trigger>
+      <span class="ml-3 text-lg font-semibold lg:ml-0">{t.nav.brand}</span>
+    </header>
+
+    <main class="flex-1">
+      {@render children()}
+    </main>
+  </div>
 </Sheet.Root>
