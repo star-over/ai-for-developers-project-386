@@ -6,6 +6,7 @@
   import { Label } from '$lib/components/ui/label/index.js';
   import { bookingSchema } from '$lib/validation/schemas.js';
   import { addBookingId } from '$lib/stores/bookings.svelte.js';
+  import { getGuestProfile, saveGuestProfile } from '$lib/stores/guestProfile.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
   let { eventTypeId, startTime, onCancel }: {
@@ -14,8 +15,9 @@
     onCancel?: () => void;
   } = $props();
 
-  let guestName = $state('');
-  let guestEmail = $state('');
+  const profile = getGuestProfile();
+  let guestName = $state(profile.name);
+  let guestEmail = $state(profile.email);
   let errors = $state<{ guestName?: string; guestEmail?: string }>({});
   let serverError = $state('');
   let success = $state(false);
@@ -40,6 +42,7 @@
       { data: { eventTypeId, startTime, guestName, guestEmail } },
       {
         onSuccess: (response) => {
+          saveGuestProfile({ name: guestName, email: guestEmail });
           addBookingId({ id: response.data.id });
           success = true;
           setTimeout(() => goto('/booking'), 1500);
