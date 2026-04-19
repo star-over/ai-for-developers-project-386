@@ -3,7 +3,10 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as Sheet from '$lib/components/ui/sheet/index.js';
+  import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
+  import MoreVerticalIcon from '@lucide/svelte/icons/more-vertical';
+  import Trash2Icon from '@lucide/svelte/icons/trash-2';
   import BookingCardContent from '$lib/components/BookingCardContent.svelte';
   import { removeBookingId } from '$lib/stores/bookings.svelte.js';
   import { t } from '$lib/i18n/index.js';
@@ -53,14 +56,24 @@
         duration={booking.duration}
       >
         {#snippet actions()}
-          <Button
-            variant="ghost"
-            size="sm"
-            class="text-destructive hover:text-destructive"
-            onclick={() => { dialogOpen = true; }}
-          >
-            {t.myBookings.confirmAction}
-          </Button>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              {#snippet child({ props })}
+                <Button {...props} variant="ghost" size="icon" class="h-8 w-8 text-muted-foreground">
+                  <MoreVerticalIcon class="h-4 w-4" />
+                </Button>
+              {/snippet}
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content align="end" class="w-40">
+              <DropdownMenu.Item
+                class="text-destructive focus:text-destructive"
+                onSelect={() => { dialogOpen = true; }}
+              >
+                <Trash2Icon class="mr-2 h-4 w-4" />
+                {t.myBookings.confirmAction}
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
         {/snippet}
       </BookingCardContent>
     </Card.Content>
