@@ -1,26 +1,30 @@
 <script lang="ts">
   import { createSlotsList } from '$lib/api/default/default.js';
   import { Button } from '$lib/components/ui/button/index.js';
+  import { Calendar } from '$lib/components/ui/calendar/index.js';
   import { t } from '$lib/i18n/index.js';
-  import { cn } from '$lib/utils.js';
+  import { today, getLocalTimeZone, type DateValue } from '@internationalized/date';
 
   let { eventTypeId, onSlotSelect }: {
     eventTypeId: string;
     onSlotSelect: (startTime: string) => void;
   } = $props();
 
-  const DAY_NAMES = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+  const tz = getLocalTimeZone();
+  const minValue = today(tz);
+  const maxValue = today(tz).add({ days: 13 });
 
-  const today = new Date();
-  const todayMs = today.getTime();
-  const MS_PER_DAY = 86400000;
-  const dates = Array.from({ length: 14 }, (_, i) => new Date(todayMs + i * MS_PER_DAY));
-
-  const formatDate = ({ date }: { date: Date }) =>
-    date.toISOString().slice(0, 10);
-
-  let selectedDate = $state(formatDate({ date: new Date() }));
+  let calendarValue = $state<DateValue | undefined>(minValue);
   let selectedSlot = $state<string | null>(null);
+
+  const selectedDate = $derived(calendarValue ? calendarValue.toString() : minValue.toString());
+
+  $effect(() => {
+    // Reset slot when date changes
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    selectedDate;
+    selectedSlot = null;
+  });
 
   const query = $derived(
     createSlotsList(() => ({ date: selectedDate, eventTypeId })),
@@ -40,24 +44,16 @@
 <div>
   <p class="mb-2 text-sm font-medium text-muted-foreground">{t.booking.selectDate}</p>
 
-  <!-- Date strip -->
-  <div class="mb-4 flex gap-2 overflow-x-auto pb-2">
-    {#each dates as date (formatDate({ date }))}
-      {@const dateStr = formatDate({ date })}
-      <button
-        type="button"
-        class={cn(
-          'flex min-h-[56px] min-w-[52px] flex-col items-center justify-center rounded-md border px-2 py-1 text-xs transition-colors',
-          selectedDate === dateStr
-            ? 'border-primary bg-primary text-primary-foreground'
-            : 'hover:bg-accent',
-        )}
-        onclick={() => { selectedDate = dateStr; selectedSlot = null; }}
-      >
-        <span class="text-[10px]">{DAY_NAMES[date.getDay()]}</span>
-        <span class="text-base font-semibold">{date.getDate()}</span>
-      </button>
-    {/each}
+  <!-- Month calendar — only next 14 days are selectable -->
+  <div class="mb-4 flex justify-center">
+    <Calendar
+      type="single"
+      bind:value={calendarValue}
+      {minValue}
+      {maxValue}
+      locale="ru"
+      class="rounded-lg border"
+    />
   </div>
 
   <!-- Slot grid -->
