@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Vite
+frontend/.vite/
+
+# SQLite
+data/
+*.sqlite
+*.sqlite3
+
+# TypeSpec output
+spec/tsp-output/
+
+# Orval generated
+frontend/src/lib/api/endpoints.ts
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test output
+coverage/
+playwright-report/
+test-results/
+
+# Logs
+*.log
+npm-debug.log*
