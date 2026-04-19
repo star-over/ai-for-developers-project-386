@@ -97,13 +97,13 @@
       <p class="text-sm text-destructive">{serverError}</p>
     {/if}
 
-    <div class="flex gap-2">
+    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
       {#if onCancel}
-        <Button type="button" variant="outline" onclick={onCancel} class="flex-1">
+        <Button type="button" variant="outline" onclick={onCancel}>
           {t.booking.form.cancel}
         </Button>
       {/if}
-      <Button type="submit" disabled={mutation.isPending} class={onCancel ? 'flex-1' : 'w-full'}>
+      <Button type="submit" disabled={mutation.isPending} class={onCancel ? '' : 'w-full'}>
         {mutation.isPending ? t.common.loading : t.booking.form.submit}
       </Button>
     </div>
