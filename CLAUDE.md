@@ -22,7 +22,8 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 - SPA, без SSR/SvelteKit
 
 ### Backend
-- Node.js + Fastify, Drizzle ORM, SQLite
+- Node.js + Fastify, Zod validation, in-memory store (Map + JSONL seed)
+- Drizzle ORM + SQLite — будущий этап
 
 ### Validation
 - Zod (frontend + backend, shared validation schemas)
@@ -31,7 +32,7 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 ### Tooling
 - TypeSpec → OpenAPI 3.x
 - Prism (mock-сервер для разработки фронта без бэкенда)
-- ESLint 9 (flat config), Airbnb style
+- ESLint 10 (flat config), Airbnb style
 - Vitest (unit), @testing-library/svelte, Playwright (e2e)
 - Docker (multi-stage build)
 
@@ -51,17 +52,17 @@ Makefile        # Команды сборки, генерации, тестов
 **Always use `make` — never `npm run` directly.**
 
 ```bash
-make generate      # TypeSpec → OpenAPI → Orval хуки
-make mock          # Prism mock-сервер
-make dev-backend   # Fastify dev server
-make dev-frontend  # Vite dev server
+make generate      # TypeSpec → OpenAPI → Orval hooks
+make dev-frontend  # Vite dev server (port 5173)
+make dev-backend   # Fastify dev server (port 3000)
+make mock          # Prism mock server (port 4010)
 make lint          # ESLint check
 make lint-fix      # ESLint autofix
-make typecheck     # TypeScript type check (svelte-check, frontend)
-make typecheck-backend  # TypeScript type check (tsc --noEmit, backend)
+make typecheck     # TypeScript check (frontend + backend)
 make test          # Vitest (frontend + backend)
 make test-e2e      # Playwright e2e
-make precommit     # lint + typecheck (frontend + backend) + test
+make check         # Full quality gate (pre-commit hook)
+make help          # Show available commands
 ```
 
 ## Linting Policy
@@ -80,6 +81,7 @@ make precommit     # lint + typecheck (frontend + backend) + test
 - Work directly on `master` — no feature branches
 - Restart dev-server after any git operations that change files
 - Always use `/caveman-commit` for commit messages
+- Pre-commit hook runs `make check` (lint + typecheck + test) automatically
 
 ## CI
 

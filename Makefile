@@ -1,39 +1,46 @@
-.PHONY: spec-build api-generate generate mock lint lint-fix typecheck typecheck-backend test test-e2e precommit
+.DEFAULT_GOAL := help
 
-spec-build:
+# --- Generation ---
+
+generate: ## TypeSpec → OpenAPI → Orval hooks
 	cd spec && npx tsp compile .
-
-api-generate:
 	cd frontend && npx orval
 
-generate: spec-build api-generate
+# --- Development ---
 
-mock:
+dev-frontend: ## Vite dev server (port 5173)
+	cd frontend && npx vite dev
+
+dev-backend: ## Fastify dev server (port 3000)
+	cd backend && npx tsx watch src/index.ts
+
+mock: ## Prism mock server (port 4010)
 	npx @stoplight/prism-cli mock spec/tsp-output/@typespec/openapi3/openapi.yaml --port 4010 --dynamic
 
-lint:
+# --- Quality ---
+
+lint: ## ESLint check
 	npx eslint .
 
-lint-fix:
+lint-fix: ## ESLint autofix
 	npx eslint . --fix
 
-typecheck:
+typecheck: ## TypeScript check (frontend + backend)
 	cd frontend && npx svelte-check --tsconfig ./tsconfig.json
-
-typecheck-backend:
 	cd backend && npx tsc --noEmit
 
-test:
+test: ## Vitest (frontend + backend)
 	cd backend && npx vitest run
 	cd frontend && npx vitest run --passWithNoTests
 
-test-e2e:
+test-e2e: ## Playwright e2e tests
 	cd e2e && npx playwright test
 
-dev-backend:
-	cd backend && npx tsx watch src/index.ts
+check: lint typecheck test ## Full quality gate (pre-commit)
 
-dev-frontend:
-	cd frontend && npx vite dev
+# --- Help ---
 
-precommit: lint typecheck typecheck-backend test
+help: ## Show available commands
+	@grep -E '^[a-zA-Z0-9_-]+:.*##' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*##"}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: generate dev-frontend dev-backend mock lint lint-fix typecheck test test-e2e check help

@@ -17,8 +17,9 @@ Design First: TypeSpec → OpenAPI → раздельная реализация
 
 ### Backend
 - **Node.js** + **Fastify**
-- **Drizzle ORM** (работа с БД)
-- **SQLite** (база данных)
+- **Zod** (валидация запросов)
+- **In-memory store** (Map + JSONL seed) — текущий этап
+- **Drizzle ORM** + **SQLite** — будущий этап
 
 ### Валидация
 - **Zod** (фронтенд + бэкенд) — единые схемы валидации данных
@@ -43,13 +44,12 @@ Design First: TypeSpec → OpenAPI → раздельная реализация
 - Бэкенд: `fastify.inject()` для тестирования роутов без поднятия сервера
 
 ### Линтинг
-- **ESLint 9** (flat config, единый `eslint.config.js`)
+- **ESLint 10** (flat config, единый `eslint.config.js` в корне)
 - **eslint-plugin-svelte** (фронтенд)
-- **@eslint/js** recommended (бэкенд)
+- **typescript-eslint** (фронтенд + бэкенд)
 - Стиль: Airbnb
 - **Политика:** errors — только то, что ломает билд. Форматирование и стиль — warnings
-- **Порядок работы:** при имплементации фокус на errors, warnings устраняются отдельным этапом
-- **Стиль функций (warning):** новые функции оформлять как `const fx = (props) => {}` с вызовом `fx({ var1, var2 })` — именованные параметры через объект для читаемости AI-агентами. Не приоритетно, применяется после работающего кода
+- **Pre-commit hook:** `make check` (lint + typecheck frontend/backend + vitest) запускается автоматически перед каждым коммитом
 
 ### i18n (централизация строк)
 - Типизированный TS-модуль (`i18n/index.ts`) — простой объект со строками
@@ -79,10 +79,14 @@ project/
 │   ├── orval.config.ts
 │   └── vite.config.ts
 ├── backend/
+│   ├── data/                    # JSONL seed файлы
 │   ├── src/
-│   │   ├── routes/              # Fastify роуты
-│   │   ├── db/                  # Drizzle schema + миграции
-│   │   └── index.ts
+│   │   ├── routes/              # Fastify роуты (event-types, slots, bookings, admin)
+│   │   ├── app.ts               # Фабрика Fastify (для тестов)
+│   │   ├── store.ts             # In-memory Map хранилище + JSONL загрузка
+│   │   ├── validation.ts        # Zod-схемы валидации
+│   │   └── index.ts             # Точка входа
+│   ├── tests/                   # Vitest через fastify.inject()
 │   └── package.json
 ├── e2e/                         # Playwright e2e тесты
 ├── docs/
@@ -97,8 +101,8 @@ project/
 Фронтенд и бэкенд — отдельные части приложения. Фронтенд получает данные и выполняет действия **только через API по контракту**. Интерфейс должен корректно работать с отдельно запущенным бэкендом.
 
 ### Режимы разработки фронтенда:
-1. **С mock-сервером (Prism):** `prism mock openapi.yaml` — фронт работает без реального бэкенда, Prism отдаёт ответы по OpenAPI spec
-2. **С реальным бэкендом:** фронт подключается к запущенному бэкенду
+1. **С реальным бэкендом (основной):** `make dev-backend` + `make dev-frontend` — Vite proxy направляет `/api` на `localhost:3000`
+2. **С mock-сервером (Prism):** `make mock` + изменить proxy target на `localhost:4010` в `vite.config.ts` — для работы без бэкенда
 
 ## Pipeline генерации кода
 
@@ -108,37 +112,19 @@ spec/main.tsp → tsp compile → openapi.yaml → orval → frontend/src/lib/ap
 
 ### Makefile
 
-```makefile
-spec-build:
-	cd spec && npx tsp compile .
+`make help` — список всех команд. Основные:
 
-api-generate:
-	cd frontend && npx orval
-
-generate: spec-build api-generate
-
-mock:
-	npx @stoplight/prism-cli mock spec/tsp-output/@typespec/openapi3/openapi.yaml --port 4010
-
-lint:
-	npx eslint .
-
-lint-fix:
-	npx eslint . --fix
-
-test:
-	cd backend && npx vitest run
-	cd frontend && npx vitest run
-
-test-e2e:
-	cd e2e && npx playwright test
-```
-
-- `make generate` — обновляет всё от контракта до клиентского кода
-- `make mock` — запуск Prism mock-сервера
-- `make lint` / `make lint-fix` — проверка / автоисправление
-- `make test` — unit-тесты фронт + бэк
-- `make test-e2e` — e2e тесты
+| Команда | Описание |
+|---------|----------|
+| `make generate` | TypeSpec → OpenAPI → Orval hooks |
+| `make dev-frontend` | Vite dev server (port 5173) |
+| `make dev-backend` | Fastify dev server (port 3000) |
+| `make mock` | Prism mock server (port 4010) |
+| `make lint` / `make lint-fix` | ESLint check / autofix |
+| `make typecheck` | TypeScript check (frontend + backend) |
+| `make test` | Vitest (frontend + backend) |
+| `make test-e2e` | Playwright e2e |
+| `make check` | Full quality gate (lint + typecheck + test) |
 
 ## Docker
 
