@@ -30,6 +30,12 @@ Design First: TypeSpec → OpenAPI → раздельная реализация
 - **TypeSpec** → **OpenAPI 3.x**
 - **Prism** (mock-сервер из OpenAPI spec — разработка фронта без реального бэкенда)
 
+#### TypeSpec: важные детали (v1.11+)
+- `@service(#{ title: "..." })` — объектные значения в декораторах через `#{}`, не `{}`
+- `@format("uuid")` на id-полях, `@format("email")` на email — дают правильные данные в Prism dynamic mode
+- `@extension("additionalProperties", false)` на каждой модели — запрещает лишние поля; требует `import "@typespec/openapi"` + `using TypeSpec.OpenAPI`
+- Prism запускать с `--dynamic` флагом — генерирует реалистичные данные по JSON Schema вместо пустых значений
+
 ### Тестирование
 - **Vitest** (unit-тесты, фронт + бэк)
 - **@testing-library/svelte** (компонентные тесты)
@@ -104,15 +110,15 @@ spec/main.tsp → tsp compile → openapi.yaml → orval → frontend/src/lib/ap
 
 ```makefile
 spec-build:
-	cd spec && tsp compile .
+	cd spec && npx tsp compile .
 
 api-generate:
-	cd frontend && orval
+	cd frontend && npx orval
 
 generate: spec-build api-generate
 
 mock:
-	prism mock spec/openapi.yaml
+	npx @stoplight/prism-cli mock spec/tsp-output/@typespec/openapi3/openapi.yaml --port 4010
 
 lint:
 	npx eslint .
@@ -121,8 +127,8 @@ lint-fix:
 	npx eslint . --fix
 
 test:
-	cd frontend && npx vitest run
 	cd backend && npx vitest run
+	cd frontend && npx vitest run
 
 test-e2e:
 	cd e2e && npx playwright test

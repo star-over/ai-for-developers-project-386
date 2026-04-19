@@ -119,7 +119,7 @@ Dockerfile
 **Files:**
 - Create: `Makefile`
 
-- [ ] **Step 1: Создать Makefile**
+- [x] **Step 1: Создать Makefile**
 
 ```makefile
 .PHONY: spec-build api-generate generate mock lint lint-fix test test-e2e
@@ -155,7 +155,7 @@ dev-frontend:
 	cd frontend && npx vite dev
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add Makefile
@@ -171,20 +171,20 @@ git commit -m "chore: add root Makefile with build/test/dev commands"
 - Create: `spec/tspconfig.yaml`
 - Create: `spec/package.json`
 
-- [ ] **Step 1: Инициализировать spec пакет**
+- [x] **Step 1: Инициализировать spec пакет**
 
 ```bash
 mkdir -p spec
 cd spec && npm init -y
 ```
 
-- [ ] **Step 2: Установить TypeSpec**
+- [x] **Step 2: Установить TypeSpec**
 
 ```bash
 cd spec && npm install @typespec/compiler @typespec/http @typespec/rest @typespec/openapi3
 ```
 
-- [ ] **Step 3: Создать tspconfig.yaml**
+- [x] **Step 3: Создать tspconfig.yaml**
 
 ```yaml
 emit:
@@ -194,7 +194,7 @@ options:
     output-file: openapi.yaml
 ```
 
-- [ ] **Step 4: Написать API-контракт spec/main.tsp**
+- [x] **Step 4: Написать API-контракт spec/main.tsp**
 
 ```typespec
 import "@typespec/http";
@@ -355,7 +355,7 @@ namespace AdminBookings {
 }
 ```
 
-- [ ] **Step 5: Скомпилировать и проверить**
+- [x] **Step 5: Скомпилировать и проверить**
 
 ```bash
 cd spec && npx tsp compile .
@@ -363,7 +363,7 @@ cd spec && npx tsp compile .
 
 Ожидаемый результат: файл `spec/tsp-output/@typespec/openapi3/openapi.yaml` создан без ошибок.
 
-- [ ] **Step 6: Проверить сгенерированный OpenAPI**
+- [x] **Step 6: Проверить сгенерированный OpenAPI**
 
 ```bash
 cat spec/tsp-output/@typespec/openapi3/openapi.yaml
@@ -371,7 +371,7 @@ cat spec/tsp-output/@typespec/openapi3/openapi.yaml
 
 Убедиться что все 9 endpoints присутствуют с правильными методами и путями.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add spec/
