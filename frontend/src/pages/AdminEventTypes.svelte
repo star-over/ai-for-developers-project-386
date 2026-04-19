@@ -32,6 +32,14 @@
   let formErrors = $state<{ name?: string; duration?: string }>({});
   let deleteTarget = $state<EventType | null>(null);
 
+  let innerWidth = $state(window.innerWidth);
+  $effect(() => {
+    const onResize = () => { innerWidth = window.innerWidth; };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  });
+  const isDesktop = $derived(innerWidth >= 768);
+
   const openCreate = () => {
     editingId = null;
     formName = '';
@@ -85,6 +93,8 @@
   };
 
   const isPending = $derived(createMutation.isPending || updateMutation.isPending);
+
+  const formTitle = $derived(editingId ? t.admin.eventTypes.edit : t.admin.eventTypes.create);
 </script>
 
 <div class="mx-auto max-w-lg p-4">
@@ -133,53 +143,78 @@
   {/if}
 </div>
 
-<!-- Create/Edit Sheet -->
-<Sheet.Root bind:open={sheetOpen}>
-  <Sheet.Content side="bottom" class="max-h-[80vh]">
-    <Sheet.Header>
-      <Sheet.Title>
-        {editingId ? t.admin.eventTypes.edit : t.admin.eventTypes.create}
-      </Sheet.Title>
-    </Sheet.Header>
-    <div class="flex flex-col gap-4 px-4 py-2">
-      <div class="flex flex-col gap-1">
-        <Label for="name">{t.admin.eventTypes.form.name}</Label>
-        <Input
-          id="name"
-          bind:value={formName}
-          placeholder={t.admin.eventTypes.form.namePlaceholder}
-          class={formErrors.name ? 'border-destructive' : ''}
-        />
-        {#if formErrors.name}
-          <p class="text-xs text-destructive">{formErrors.name}</p>
-        {/if}
-      </div>
-
-      <div class="flex flex-col gap-1">
-        <Label for="duration">{t.admin.eventTypes.form.duration}</Label>
-        <select
-          id="duration"
-          bind:value={formDuration}
-          class="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-        >
-          {#each [10, 15, 20, 30] as d (d)}
-            <option value={d}>{d} мин</option>
-          {/each}
-        </select>
-      </div>
+{#snippet formFields()}
+  <div class="flex flex-col gap-4 px-4 py-2">
+    <div class="flex flex-col gap-1">
+      <Label for="et-name">{t.admin.eventTypes.form.name}</Label>
+      <Input
+        id="et-name"
+        bind:value={formName}
+        placeholder={t.admin.eventTypes.form.namePlaceholder}
+        class={formErrors.name ? 'border-destructive' : ''}
+      />
+      {#if formErrors.name}
+        <p class="text-xs text-destructive">{formErrors.name}</p>
+      {/if}
     </div>
-    <Sheet.Footer class="px-4 pb-4">
-      <Sheet.Close>
-        {#snippet child({ props })}
-          <Button {...props} variant="outline">{t.admin.eventTypes.form.cancel}</Button>
-        {/snippet}
-      </Sheet.Close>
-      <Button onclick={handleSave} disabled={isPending}>
-        {isPending ? t.common.loading : t.admin.eventTypes.form.save}
-      </Button>
-    </Sheet.Footer>
-  </Sheet.Content>
-</Sheet.Root>
+
+    <div class="flex flex-col gap-1">
+      <Label for="et-duration">{t.admin.eventTypes.form.duration}</Label>
+      <select
+        id="et-duration"
+        bind:value={formDuration}
+        class="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+      >
+        {#each [10, 15, 20, 30] as d (d)}
+          <option value={d}>{d} мин</option>
+        {/each}
+      </select>
+    </div>
+  </div>
+{/snippet}
+
+<!-- Desktop: centered Dialog -->
+{#if isDesktop}
+  <Dialog.Root bind:open={sheetOpen}>
+    <Dialog.Content class="sm:max-w-md">
+      <Dialog.Header>
+        <Dialog.Title>{formTitle}</Dialog.Title>
+      </Dialog.Header>
+      {@render formFields()}
+      <Dialog.Footer class="px-4 pb-2">
+        <Dialog.Close>
+          {#snippet child({ props })}
+            <Button {...props} variant="outline">{t.admin.eventTypes.form.cancel}</Button>
+          {/snippet}
+        </Dialog.Close>
+        <Button onclick={handleSave} disabled={isPending}>
+          {isPending ? t.common.loading : t.admin.eventTypes.form.save}
+        </Button>
+      </Dialog.Footer>
+    </Dialog.Content>
+  </Dialog.Root>
+
+<!-- Mobile: bottom Sheet -->
+{:else}
+  <Sheet.Root bind:open={sheetOpen}>
+    <Sheet.Content side="bottom" class="max-h-[80vh]">
+      <Sheet.Header>
+        <Sheet.Title>{formTitle}</Sheet.Title>
+      </Sheet.Header>
+      {@render formFields()}
+      <Sheet.Footer class="px-4 pb-4">
+        <Sheet.Close>
+          {#snippet child({ props })}
+            <Button {...props} variant="outline">{t.admin.eventTypes.form.cancel}</Button>
+          {/snippet}
+        </Sheet.Close>
+        <Button onclick={handleSave} disabled={isPending}>
+          {isPending ? t.common.loading : t.admin.eventTypes.form.save}
+        </Button>
+      </Sheet.Footer>
+    </Sheet.Content>
+  </Sheet.Root>
+{/if}
 
 <!-- Delete Dialog -->
 <Dialog.Root open={!!deleteTarget} onOpenChange={(open) => { if (!open) deleteTarget = null; }}>

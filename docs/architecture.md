@@ -12,8 +12,8 @@ Design First: TypeSpec → OpenAPI → раздельная реализация
 - **Tailwind 4** (стили)
 - **shadcn-svelte** (UI компоненты)
 - **@tanstack/svelte-query** (запросы, кеш, инвалидация)
-- **@mateothegreat/svelte5-router** (SPA роутинг)
-- **Orval** (генерация TanStack Query хуков из OpenAPI)
+- **@mateothegreat/svelte5-router** (SPA роутинг) — нет `:param` синтаксиса, использовать RegExp; last-match-wins
+- **Orval** (генерация TanStack Query хуков из OpenAPI) — параметры передаются как getter-функции `() => params`
 
 ### Backend
 - **Node.js** + **Fastify**
@@ -169,3 +169,7 @@ SQLite файл персистится через Docker volume.
 3. Возвращает массив `{startTime, endTime, available: boolean}`
 
 Защита от race condition: unique constraint на `startTime` в таблице bookings.
+
+---
+
+> Нетривиальные детали реализации (роутинг, Orval, Svelte runes) — см. [`docs/gotchas.md`](./gotchas.md)
