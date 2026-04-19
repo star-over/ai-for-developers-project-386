@@ -28,6 +28,7 @@ frontend/src/lib/api/endpoints.ts
 .agents/
 .claude/
 .qwen/
+skills-lock.json
 
 # IDE
 .vscode/

@@ -24,6 +24,10 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 ### Backend
 - Node.js + Fastify, Drizzle ORM, SQLite
 
+### Validation
+- Zod (frontend + backend, shared validation schemas)
+- Zod schemas: `.describe()` on every field + custom error messages for AI-agent context
+
 ### Tooling
 - TypeSpec → OpenAPI 3.x
 - Prism (mock-сервер для разработки фронта без бэкенда)
@@ -61,6 +65,11 @@ make test-e2e      # Playwright e2e
 - **warnings** — форматирование и стиль (Airbnb)
 - При имплементации фокус на errors, warnings устраняются отдельным этапом
 
+## Code Style
+
+- New functions: `const fx = (props) => {}` with call `fx({ var1, var2 })` — named params via object for AI-agent readability
+- ESLint: warn level, not blocking. Apply after working code is ready
+
 ## CI
 
 - GitHub Actions workflow `.github/workflows/hexlet-check.yml` runs Hexlet's automated checks on every push. **Do not edit or delete this file.**
@@ -70,3 +79,6 @@ make test-e2e      # Playwright e2e
 - `docs/spec.md` — спецификация продукта (роли, модели, бизнес-правила, API, страницы)
 - `docs/architecture.md` — архитектура и стек
 - `docs/plan.md` — план реализации (22 задачи)
+- **DO NOT** create `docs/superpowers/`, `docs/designs/`, or any extra subdirectories in `docs/`. All documentation lives flat in `docs/`.
+- **Prefer updating existing files.** If new knowledge fits into an existing doc — add it there organically, don't create a separate file.
+- **New files are OK** when a genuinely new entity or concept emerges (e.g., UI design conventions, deployment guide) that doesn't belong in existing docs. Create it flat in `docs/`, not in subdirectories.
