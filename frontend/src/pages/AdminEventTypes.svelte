@@ -177,7 +177,7 @@
       <select
         id="et-duration"
         bind:value={formDuration}
-        class="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+        class="h-10 w-full rounded-3xl border border-border bg-background shadow-sm px-3 py-2 text-sm"
       >
         {#each [10, 15, 20, 30] as d (d)}
           <option value={d}>{d} мин</option>
