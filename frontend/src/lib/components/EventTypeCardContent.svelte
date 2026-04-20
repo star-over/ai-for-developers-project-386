@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte';
   import ClockIcon from '@lucide/svelte/icons/clock';
   import CalendarIcon from '@lucide/svelte/icons/calendar';
+  import { getDurationColors } from '$lib/utils.js';
 
   let {
     name,
@@ -13,27 +14,7 @@
     actions?: Snippet;
   } = $props();
 
-  const colors = $derived(
-    duration <= 15
-      ? {
-          border: 'border-l-sky-400',
-          badge: 'bg-sky-50 text-sky-700 border border-sky-200',
-        }
-      : duration <= 20
-      ? {
-          border: 'border-l-emerald-400',
-          badge: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-        }
-      : duration <= 30
-      ? {
-          border: 'border-l-amber-400',
-          badge: 'bg-amber-50 text-amber-700 border border-amber-200',
-        }
-      : {
-          border: 'border-l-violet-400',
-          badge: 'bg-violet-50 text-violet-700 border border-violet-200',
-        },
-  );
+  const colors = $derived(getDurationColors({ duration }));
 </script>
 
 <div class="flex items-center gap-4 border-l-4 py-1 pl-4 {colors.border}">

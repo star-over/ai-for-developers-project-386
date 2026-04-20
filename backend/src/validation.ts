@@ -1,8 +1,18 @@
 import { z } from 'zod';
+import type { FastifyReply } from 'fastify';
 
 export const IdParamSchema = z.object({
   id: z.string().uuid('id must be a valid UUID').describe('Resource ID (UUID v4)'),
 });
+
+export const parseIdParam = async ({ params, reply }: { params: unknown; reply: FastifyReply }): Promise<string | null> => {
+  const parsed = IdParamSchema.safeParse(params);
+  if (!parsed.success) {
+    await reply.status(400).send({ message: parsed.error.issues[0].message });
+    return null;
+  }
+  return parsed.data.id;
+};
 
 export const DurationSchema = z.enum(['10', '15', '20', '30']).transform(Number)
   .or(z.literal(10).or(z.literal(15)).or(z.literal(20)).or(z.literal(30)))

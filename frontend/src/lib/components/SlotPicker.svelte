@@ -128,7 +128,7 @@
   {:else if query.isError}
     <p class="text-sm text-destructive">{t.common.error}</p>
   {:else if query.data?.status !== 200 || query.data.data.length === 0}
-    <p class="text-sm text-muted-foreground">Нет доступных слотов</p>
+    <p class="text-sm text-muted-foreground">{t.booking.slotsEmpty}</p>
   {:else}
     <div class="grid grid-cols-3 gap-2">
       {#each query.data.data as slot (slot.startTime)}

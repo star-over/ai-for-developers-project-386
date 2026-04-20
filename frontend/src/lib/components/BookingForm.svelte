@@ -75,6 +75,7 @@
         <UserIcon class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           id="guestName"
+          autocomplete="off"
           bind:value={guestName}
           placeholder={t.booking.form.namePlaceholder}
           class="pl-9 {errors.guestName ? 'border-destructive' : ''}"
@@ -89,9 +90,11 @@
       <Label for="guestEmail">{t.booking.form.email}</Label>
       <div class="relative">
         <MailIcon class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <!-- type="text" intentional — type="email" triggers ugly browser validation bubbles; Zod handles validation -->
         <Input
           id="guestEmail"
           type="text"
+          autocomplete="off"
           bind:value={guestEmail}
           placeholder={t.booking.form.emailPlaceholder}
           class="pl-9 {errors.guestEmail ? 'border-destructive' : ''}"

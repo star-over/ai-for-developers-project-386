@@ -4,8 +4,7 @@
   import SlotPicker from '$lib/components/SlotPicker.svelte';
   import BookingForm from '$lib/components/BookingForm.svelte';
   import { Badge } from '$lib/components/ui/badge/index.js';
-  import * as Dialog from '$lib/components/ui/dialog/index.js';
-  import * as Sheet from '$lib/components/ui/sheet/index.js';
+  import ResponsiveModal from '$lib/components/ResponsiveModal.svelte';
   import { getSelectedEventType } from '$lib/stores/selectedEventType.svelte.js';
   import BookingCardContent from '$lib/components/BookingCardContent.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
@@ -30,14 +29,6 @@
   let selectedSlot = $state<string | null>(null);
   let formOpen = $state(false);
 
-  let innerWidth = $state(window.innerWidth);
-  $effect(() => {
-    const onResize = () => { innerWidth = window.innerWidth; };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  });
-  const isDesktop = $derived(innerWidth >= 768);
-
   const handleSlotSelect = (startTime: string) => {
     selectedSlot = startTime;
     formOpen = true;
@@ -59,7 +50,7 @@
   {:else if displayEventType}
     <div class="mb-6">
       <h1 class="text-xl font-bold">{displayEventType.name}</h1>
-      <Badge variant="secondary" class="mt-1">{displayEventType.duration} мин</Badge>
+      <Badge variant="secondary" class="mt-1">{displayEventType.duration} {t.eventTypes.minutes}</Badge>
     </div>
   {/if}
 
@@ -82,36 +73,12 @@
   {/if}
 {/snippet}
 
-<!-- Desktop: centered Dialog -->
-{#if isDesktop}
-  <Dialog.Root bind:open={formOpen} onOpenChange={(open) => { if (!open) closeForm(); }}>
-    <Dialog.Content class="sm:max-w-md">
-      <Dialog.Header>
-        <Dialog.Title>{t.booking.formTitle}</Dialog.Title>
-      </Dialog.Header>
-      {@render bookingSummary()}
-      <div class="px-4 py-2">
-        {#if selectedSlot}
-          <BookingForm {eventTypeId} startTime={selectedSlot} onCancel={closeForm} />
-        {/if}
-      </div>
-    </Dialog.Content>
-  </Dialog.Root>
-
-<!-- Mobile: bottom Sheet -->
-{:else}
-  <Sheet.Root bind:open={formOpen} onOpenChange={(open) => { if (!open) closeForm(); }}>
-    <Sheet.Content side="bottom" class="max-h-[80vh]">
-      <Sheet.Header>
-        <Sheet.Title>{t.booking.formTitle}</Sheet.Title>
-      </Sheet.Header>
-      {@render bookingSummary()}
-      <div class="px-4 py-2 pb-4">
-        {#if selectedSlot}
-          <BookingForm {eventTypeId} startTime={selectedSlot} onCancel={closeForm} />
-        {/if}
-      </div>
-    </Sheet.Content>
-  </Sheet.Root>
-{/if}
+<ResponsiveModal bind:open={formOpen} onOpenChange={(open) => { if (!open) closeForm(); }} title={t.booking.formTitle}>
+  {@render bookingSummary()}
+  <div class="px-4 py-2">
+    {#if selectedSlot}
+      <BookingForm {eventTypeId} startTime={selectedSlot} onCancel={closeForm} />
+    {/if}
+  </div>
+</ResponsiveModal>
 {/if}

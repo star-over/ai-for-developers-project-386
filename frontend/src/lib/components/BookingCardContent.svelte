@@ -4,6 +4,7 @@
   import ClockIcon from '@lucide/svelte/icons/clock';
   import UserIcon from '@lucide/svelte/icons/user';
   import MailIcon from '@lucide/svelte/icons/mail';
+  import { getDurationColors } from '$lib/utils.js';
 
   let {
     eventTypeName,
@@ -27,28 +28,7 @@
   const formatTime = ({ isoStr }: { isoStr: string }) =>
     new Date(isoStr).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
 
-  // Color palette keyed by duration bucket
-  const colors = $derived(
-    duration <= 15
-      ? {
-          border: 'border-l-sky-400',
-          badge: 'bg-sky-50 text-sky-700 border border-sky-200',
-        }
-      : duration <= 20
-      ? {
-          border: 'border-l-emerald-400',
-          badge: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-        }
-      : duration <= 30
-      ? {
-          border: 'border-l-amber-400',
-          badge: 'bg-amber-50 text-amber-700 border border-amber-200',
-        }
-      : {
-          border: 'border-l-violet-400',
-          badge: 'bg-violet-50 text-violet-700 border border-violet-200',
-        },
-  );
+  const colors = $derived(getDurationColors({ duration }));
 </script>
 
 <div class="flex items-start gap-4 border-l-4 py-1 pl-4 {colors.border}">

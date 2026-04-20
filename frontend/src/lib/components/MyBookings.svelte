@@ -14,7 +14,7 @@
   {:else}
     <div class="flex flex-col gap-3">
       {#each ids as id (id)}
-        <BookingCard {id} onCanceled={() => {}} />
+        <BookingCard {id} />
       {/each}
     </div>
   {/if}

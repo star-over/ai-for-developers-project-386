@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
-import { CreateEventTypeSchema, UpdateEventTypeSchema, IdParamSchema } from '../validation.js';
+import { CreateEventTypeSchema, UpdateEventTypeSchema, parseIdParam } from '../validation.js';
 import type { EventType } from '../store.js';
 
 export const eventTypesRoutes = async (app: FastifyInstance) => {
@@ -28,11 +28,8 @@ export const eventTypesRoutes = async (app: FastifyInstance) => {
   });
 
   app.patch('/api/event-types/:id', async (request, reply) => {
-    const paramsParsed = IdParamSchema.safeParse(request.params);
-    if (!paramsParsed.success) {
-      return reply.status(400).send({ message: paramsParsed.error.issues[0].message });
-    }
-    const { id } = paramsParsed.data;
+    const id = await parseIdParam({ params: request.params, reply });
+    if (!id) return;
     const existing = store.eventTypes.get(id);
     if (!existing) {
       return reply.status(404).send({ message: 'Not found' });
@@ -49,11 +46,8 @@ export const eventTypesRoutes = async (app: FastifyInstance) => {
   });
 
   app.delete('/api/event-types/:id', async (request, reply) => {
-    const paramsParsed = IdParamSchema.safeParse(request.params);
-    if (!paramsParsed.success) {
-      return reply.status(400).send({ message: paramsParsed.error.issues[0].message });
-    }
-    const { id } = paramsParsed.data;
+    const id = await parseIdParam({ params: request.params, reply });
+    if (!id) return;
     if (!store.eventTypes.has(id)) {
       return reply.status(404).send({ message: 'Not found' });
     }

@@ -21,6 +21,7 @@ export const t = {
   booking: {
     selectDate: 'Выберите дату',
     selectSlot: 'Выберите время',
+    slotsEmpty: 'Нет доступных слотов',
     slotFree: 'Свободно',
     slotTaken: 'Занято',
     continue: 'Продолжить',
@@ -46,6 +47,7 @@ export const t = {
       create: 'Создать',
       edit: 'Редактировать',
       delete: 'Удалить',
+      empty: 'Нет типов событий',
       confirmDelete: 'Удалить тип события?',
       form: {
         name: 'Название',

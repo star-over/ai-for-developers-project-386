@@ -1,11 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
-import { CreateBookingSchema, IdParamSchema } from '../validation.js';
+import { CreateBookingSchema, parseIdParam } from '../validation.js';
+import { SLOT_DURATION, WORK_START_HOUR, WORK_END_HOUR } from '../constants.js';
 import type { Booking } from '../store.js';
-
-const SLOT_DURATION = 30;
-const WORK_START_HOUR = 9;
-const WORK_END_HOUR = 17;
 
 export const bookingsRoutes = async (app: FastifyInstance) => {
   const { store } = app;
@@ -42,7 +39,7 @@ export const bookingsRoutes = async (app: FastifyInstance) => {
       }
     }
 
-    const endTime = new Date(start.getTime() + SLOT_DURATION * 60 * 1000).toISOString();
+    const endTime = new Date(start.getTime() + eventType.duration * 60 * 1000).toISOString();
 
     const booking: Booking = {
       id: randomUUID(),
@@ -61,11 +58,8 @@ export const bookingsRoutes = async (app: FastifyInstance) => {
   });
 
   app.get('/api/bookings/:id', async (request, reply) => {
-    const paramsParsed = IdParamSchema.safeParse(request.params);
-    if (!paramsParsed.success) {
-      return reply.status(400).send({ message: paramsParsed.error.issues[0].message });
-    }
-    const { id } = paramsParsed.data;
+    const id = await parseIdParam({ params: request.params, reply });
+    if (!id) return;
     const booking = store.bookings.get(id);
     if (!booking) {
       return reply.status(404).send({ message: 'Not found' });
@@ -74,11 +68,8 @@ export const bookingsRoutes = async (app: FastifyInstance) => {
   });
 
   app.delete('/api/bookings/:id', async (request, reply) => {
-    const paramsParsed = IdParamSchema.safeParse(request.params);
-    if (!paramsParsed.success) {
-      return reply.status(400).send({ message: paramsParsed.error.issues[0].message });
-    }
-    const { id } = paramsParsed.data;
+    const id = await parseIdParam({ params: request.params, reply });
+    if (!id) return;
     if (!store.bookings.has(id)) {
       return reply.status(404).send({ message: 'Not found' });
     }

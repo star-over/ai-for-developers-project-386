@@ -8,9 +8,8 @@
   } from '$lib/api/default/default.js';
   import type { EventType, Duration } from '$lib/api/model/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
-  import * as Sheet from '$lib/components/ui/sheet/index.js';
-  import * as Dialog from '$lib/components/ui/dialog/index.js';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+  import ResponsiveModal from '$lib/components/ResponsiveModal.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import MoreVerticalIcon from '@lucide/svelte/icons/more-vertical';
@@ -35,14 +34,6 @@
   let formDuration = $state<Duration>(30);
   let formErrors = $state<{ name?: string; duration?: string }>({});
   let deleteTarget = $state<EventType | null>(null);
-
-  let innerWidth = $state(window.innerWidth);
-  $effect(() => {
-    const onResize = () => { innerWidth = window.innerWidth; };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  });
-  const isDesktop = $derived(innerWidth >= 768);
 
   const openCreate = () => {
     editingId = null;
@@ -117,7 +108,7 @@
       <Button variant="outline" onclick={() => query.refetch()}>{t.common.retry}</Button>
     </div>
   {:else if !query.data?.data || query.data.data.length === 0}
-    <p class="text-center text-muted-foreground">Нет типов событий</p>
+    <p class="text-center text-muted-foreground">{t.admin.eventTypes.empty}</p>
   {:else}
     <div class="flex flex-col gap-3">
       {#each query.data.data as et (et.id)}
@@ -163,6 +154,7 @@
       <Label for="et-name">{t.admin.eventTypes.form.name}</Label>
       <Input
         id="et-name"
+        autocomplete="off"
         bind:value={formName}
         placeholder={t.admin.eventTypes.form.namePlaceholder}
         class={formErrors.name ? 'border-destructive' : ''}
@@ -180,101 +172,41 @@
         class="h-10 w-full rounded-3xl border border-border bg-background shadow-sm px-3 py-2 text-sm"
       >
         {#each [10, 15, 20, 30] as d (d)}
-          <option value={d}>{d} мин</option>
+          <option value={d}>{d} {t.eventTypes.minutes}</option>
         {/each}
       </select>
     </div>
   </div>
 {/snippet}
 
-<!-- Desktop: centered Dialog -->
-{#if isDesktop}
-  <Dialog.Root bind:open={sheetOpen}>
-    <Dialog.Content class="sm:max-w-md">
-      <Dialog.Header>
-        <Dialog.Title>{formTitle}</Dialog.Title>
-      </Dialog.Header>
-      {@render formFields()}
-      <Dialog.Footer class="px-4 pb-2">
-        <Dialog.Close>
-          {#snippet child({ props })}
-            <Button {...props} variant="outline">{t.admin.eventTypes.form.cancel}</Button>
-          {/snippet}
-        </Dialog.Close>
-        <Button onclick={handleSave} disabled={isPending}>
-          {isPending ? t.common.loading : editingId ? t.admin.eventTypes.form.save : t.admin.eventTypes.create}
-        </Button>
-      </Dialog.Footer>
-    </Dialog.Content>
-  </Dialog.Root>
+<ResponsiveModal bind:open={sheetOpen} title={formTitle}>
+  {@render formFields()}
+  {#snippet footer()}
+    <Button variant="outline" onclick={() => { sheetOpen = false; }}>
+      {t.admin.eventTypes.form.cancel}
+    </Button>
+    <Button onclick={handleSave} disabled={isPending}>
+      {isPending ? t.common.loading : editingId ? t.admin.eventTypes.form.save : t.admin.eventTypes.create}
+    </Button>
+  {/snippet}
+</ResponsiveModal>
 
-<!-- Mobile: bottom Sheet -->
-{:else}
-  <Sheet.Root bind:open={sheetOpen}>
-    <Sheet.Content side="bottom" class="max-h-[80vh]">
-      <Sheet.Header>
-        <Sheet.Title>{formTitle}</Sheet.Title>
-      </Sheet.Header>
-      {@render formFields()}
-      <Sheet.Footer class="px-4 pb-4">
-        <Sheet.Close>
-          {#snippet child({ props })}
-            <Button {...props} variant="outline">{t.admin.eventTypes.form.cancel}</Button>
-          {/snippet}
-        </Sheet.Close>
-        <Button onclick={handleSave} disabled={isPending}>
-          {isPending ? t.common.loading : editingId ? t.admin.eventTypes.form.save : t.admin.eventTypes.create}
-        </Button>
-      </Sheet.Footer>
-    </Sheet.Content>
-  </Sheet.Root>
-{/if}
-
-<!-- Delete confirmation: Desktop Dialog / Mobile Sheet -->
-{#if isDesktop}
-  <Dialog.Root open={!!deleteTarget} onOpenChange={(open) => { if (!open) deleteTarget = null; }}>
-    <Dialog.Content>
-      <Dialog.Header>
-        <Dialog.Title>{t.admin.eventTypes.confirmDelete}</Dialog.Title>
-        {#if deleteTarget}
-          <Dialog.Description>{deleteTarget.name}</Dialog.Description>
-        {/if}
-      </Dialog.Header>
-      <Dialog.Footer>
-        <Button variant="outline" onclick={() => { deleteTarget = null; }}>
-          {t.admin.eventTypes.form.cancel}
-        </Button>
-        <Button
-          variant="destructive"
-          disabled={deleteMutation.isPending}
-          onclick={() => deleteTarget && handleDelete({ id: deleteTarget.id })}
-        >
-          {t.admin.eventTypes.delete}
-        </Button>
-      </Dialog.Footer>
-    </Dialog.Content>
-  </Dialog.Root>
-{:else}
-  <Sheet.Root open={!!deleteTarget} onOpenChange={(open) => { if (!open) deleteTarget = null; }}>
-    <Sheet.Content side="bottom">
-      <Sheet.Header>
-        <Sheet.Title>{t.admin.eventTypes.confirmDelete}</Sheet.Title>
-        {#if deleteTarget}
-          <Sheet.Description>{deleteTarget.name}</Sheet.Description>
-        {/if}
-      </Sheet.Header>
-      <Sheet.Footer class="px-4 pb-4">
-        <Button variant="outline" onclick={() => { deleteTarget = null; }}>
-          {t.admin.eventTypes.form.cancel}
-        </Button>
-        <Button
-          variant="destructive"
-          disabled={deleteMutation.isPending}
-          onclick={() => deleteTarget && handleDelete({ id: deleteTarget.id })}
-        >
-          {t.admin.eventTypes.delete}
-        </Button>
-      </Sheet.Footer>
-    </Sheet.Content>
-  </Sheet.Root>
-{/if}
+<ResponsiveModal
+  open={!!deleteTarget}
+  onOpenChange={(open) => { if (!open) deleteTarget = null; }}
+  title={t.admin.eventTypes.confirmDelete}
+  description={deleteTarget?.name}
+>
+  {#snippet footer()}
+    <Button variant="outline" onclick={() => { deleteTarget = null; }}>
+      {t.admin.eventTypes.form.cancel}
+    </Button>
+    <Button
+      variant="destructive"
+      disabled={deleteMutation.isPending}
+      onclick={() => deleteTarget && handleDelete({ id: deleteTarget.id })}
+    >
+      {t.admin.eventTypes.delete}
+    </Button>
+  {/snippet}
+</ResponsiveModal>
