@@ -62,6 +62,11 @@ export const t = {
     confirmTitle: 'Удалить запись?',
     confirmAction: 'Удалить',
   },
+  notFound: {
+    title: 'Страница не найдена',
+    subtitle: 'Запрошенная страница не существует или была удалена',
+    cta: 'На главную',
+  },
   common: {
     loading: 'Загрузка...',
     error: 'Произошла ошибка',

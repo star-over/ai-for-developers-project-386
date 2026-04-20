@@ -7,6 +7,7 @@
   import Booking from './pages/Booking.svelte';
   import AdminBookings from './pages/AdminBookings.svelte';
   import AdminEventTypes from './pages/AdminEventTypes.svelte';
+  import NotFound from './pages/NotFound.svelte';
 
   const queryClient = new QueryClient();
 
@@ -21,6 +22,6 @@
 
 <QueryClientProvider client={queryClient}>
   <Layout>
-    <Router {routes} />
+    <Router {routes} statuses={{ 404: () => ({ component: NotFound }) }} />
   </Layout>
 </QueryClientProvider>

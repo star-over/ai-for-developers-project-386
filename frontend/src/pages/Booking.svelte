@@ -10,6 +10,7 @@
   import BookingCardContent from '$lib/components/BookingCardContent.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { t } from '$lib/i18n/index.js';
+  import NotFound from './NotFound.svelte';
 
   let { route }: { route?: RouteResult } = $props();
 
@@ -22,6 +23,9 @@
   const query = createEventTypesList();
   const eventTypeFromQuery = $derived(query.data?.data?.find((et) => et.id === eventTypeId));
   const displayEventType = $derived(selectedEventType ?? eventTypeFromQuery);
+
+  // eventType not found after data loaded — invalid ID
+  const isNotFound = $derived(!query.isPending && !query.isError && query.data && !eventTypeFromQuery && !selectedEventType);
 
   let selectedSlot = $state<string | null>(null);
   let formOpen = $state(false);
@@ -46,6 +50,9 @@
 
 </script>
 
+{#if isNotFound}
+  <NotFound />
+{:else}
 <div class="mx-auto max-w-lg p-4">
   {#if query.isPending}
     <div class="h-8 w-48 animate-pulse rounded bg-muted"></div>
@@ -106,4 +113,5 @@
       </div>
     </Sheet.Content>
   </Sheet.Root>
+{/if}
 {/if}
