@@ -55,6 +55,13 @@
 | 9 | Backend: Admin bookings | 4 |
 | 10 | Vite proxy + переключение фронта на бэкенд | 6–9 |
 
+### Этап 3.5: Unit/Integration тесты
+
+| # | Задача | Статус |
+|---|--------|--------|
+| 25 | Backend: edge-case тесты (валидация, 400/404) | ✅ Done |
+| 26 | Frontend: unit-тесты чистых функций (schemas, utils) | ✅ Done |
+
 ### Этап 4: Интеграция и финализация
 
 | # | Задача | Зависит от |
@@ -100,6 +107,7 @@ backend/tests/event-types.test.ts
 backend/tests/slots.test.ts
 backend/tests/bookings.test.ts
 backend/tests/admin.test.ts
+backend/tests/store.test.ts
 ```
 
 ### frontend/
@@ -114,7 +122,9 @@ frontend/src/App.svelte           # Root компонент + router
 frontend/src/lib/i18n/index.ts    # Централизованные строки
 frontend/src/lib/i18n/ru.ts       # Русские строки
 frontend/src/lib/api/             # Orval-generated (автогенерация)
+frontend/src/lib/validation/schemas.ts # Zod-схемы валидации форм
 frontend/src/lib/stores/bookings.ts  # LocalStorage store для "Мои записи"
+frontend/src/lib/__tests__/pure.test.ts # Unit-тесты чистых функций
 frontend/src/lib/components/Layout.svelte       # Header + навигация
 frontend/src/lib/components/SlotPicker.svelte    # Календарь + слоты
 frontend/src/lib/components/BookingForm.svelte   # Форма имя + email

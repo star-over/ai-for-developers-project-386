@@ -83,4 +83,28 @@ describe('Slots API', () => {
     const res = await app.inject({ method: 'GET', url: '/api/slots' });
     expect(res.statusCode).toBe(400);
   });
+
+  it('returns 400 for non-existent eventTypeId', async () => {
+    const res = await app.inject({
+      method: 'GET',
+      url: '/api/slots?date=2026-04-20&eventTypeId=00000000-0000-0000-0000-000000000000',
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('returns 400 for invalid date format', async () => {
+    const res = await app.inject({
+      method: 'GET',
+      url: `/api/slots?date=20-04-2026&eventTypeId=${eventTypeId}`,
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('returns 400 for invalid UUID in eventTypeId', async () => {
+    const res = await app.inject({
+      method: 'GET',
+      url: '/api/slots?date=2026-04-20&eventTypeId=not-a-uuid',
+    });
+    expect(res.statusCode).toBe(400);
+  });
 });

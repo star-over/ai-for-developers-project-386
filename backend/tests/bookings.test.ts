@@ -36,6 +36,29 @@ describe('Bookings API', () => {
     expect(body.endTime).toBe('2026-04-20T09:30:00.000Z');
   });
 
+  it('POST /api/bookings sets endTime based on eventType.duration', async () => {
+    const shortType = await app.inject({
+      method: 'POST',
+      url: '/api/event-types',
+      payload: { name: 'Quick Call', duration: 15 },
+    });
+
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/bookings',
+      payload: {
+        eventTypeId: shortType.json().id,
+        guestName: 'Alice',
+        guestEmail: 'alice@test.com',
+        startTime: '2026-04-20T09:00:00.000Z',
+      },
+    });
+    expect(res.statusCode).toBe(201);
+    const body = res.json();
+    expect(body.duration).toBe(15);
+    expect(body.endTime).toBe('2026-04-20T09:15:00.000Z');
+  });
+
   it('POST /api/bookings rejects duplicate startTime (409)', async () => {
     await app.inject({
       method: 'POST',
@@ -148,5 +171,60 @@ describe('Bookings API', () => {
       payload: { eventTypeId, guestName: '', guestEmail: '' },
     });
     expect(res.statusCode).toBe(400);
+  });
+
+  it('POST /api/bookings rejects invalid UUID in eventTypeId', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/bookings',
+      payload: {
+        eventTypeId: 'not-a-uuid',
+        guestName: 'Alice',
+        guestEmail: 'alice@test.com',
+        startTime: '2026-04-20T09:00:00.000Z',
+      },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('POST /api/bookings rejects invalid email', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/bookings',
+      payload: {
+        eventTypeId,
+        guestName: 'Alice',
+        guestEmail: 'not-an-email',
+        startTime: '2026-04-20T09:00:00.000Z',
+      },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('POST /api/bookings rejects invalid startTime format', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/bookings',
+      payload: {
+        eventTypeId,
+        guestName: 'Alice',
+        guestEmail: 'alice@test.com',
+        startTime: 'not-a-date',
+      },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('GET /api/bookings/:id returns 400 for invalid UUID', async () => {
+    const res = await app.inject({ method: 'GET', url: '/api/bookings/not-a-uuid' });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('DELETE /api/bookings/:id returns 404 for non-existent id', async () => {
+    const res = await app.inject({
+      method: 'DELETE',
+      url: '/api/bookings/00000000-0000-0000-0000-000000000000',
+    });
+    expect(res.statusCode).toBe(404);
   });
 });

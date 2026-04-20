@@ -74,4 +74,31 @@ describe('Event Types API', () => {
     const res = await app.inject({ method: 'DELETE', url: '/api/event-types/00000000-0000-0000-0000-000000000000' });
     expect(res.statusCode).toBe(404);
   });
+
+  it('POST /api/event-types rejects empty name', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/event-types',
+      payload: { name: '', duration: 30 },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('PATCH /api/event-types/:id returns 404 for non-existent id', async () => {
+    const res = await app.inject({
+      method: 'PATCH',
+      url: '/api/event-types/00000000-0000-0000-0000-000000000000',
+      payload: { name: 'Updated' },
+    });
+    expect(res.statusCode).toBe(404);
+  });
+
+  it('PATCH /api/event-types/:id returns 400 for invalid UUID', async () => {
+    const res = await app.inject({
+      method: 'PATCH',
+      url: '/api/event-types/not-a-uuid',
+      payload: { name: 'Updated' },
+    });
+    expect(res.statusCode).toBe(400);
+  });
 });
