@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
-import { CreateBookingSchema } from '../validation.js';
+import { CreateBookingSchema, IdParamSchema } from '../validation.js';
 import type { Booking } from '../store.js';
 
 const SLOT_DURATION = 30;
@@ -61,7 +61,11 @@ export const bookingsRoutes = async (app: FastifyInstance) => {
   });
 
   app.get('/api/bookings/:id', async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const paramsParsed = IdParamSchema.safeParse(request.params);
+    if (!paramsParsed.success) {
+      return reply.status(400).send({ message: paramsParsed.error.issues[0].message });
+    }
+    const { id } = paramsParsed.data;
     const booking = store.bookings.get(id);
     if (!booking) {
       return reply.status(404).send({ message: 'Not found' });
@@ -70,7 +74,11 @@ export const bookingsRoutes = async (app: FastifyInstance) => {
   });
 
   app.delete('/api/bookings/:id', async (request, reply) => {
-    const { id } = request.params as { id: string };
+    const paramsParsed = IdParamSchema.safeParse(request.params);
+    if (!paramsParsed.success) {
+      return reply.status(400).send({ message: paramsParsed.error.issues[0].message });
+    }
+    const { id } = paramsParsed.data;
     if (!store.bookings.has(id)) {
       return reply.status(404).send({ message: 'Not found' });
     }

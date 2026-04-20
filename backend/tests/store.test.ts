@@ -16,14 +16,14 @@ describe('Store', () => {
 
   it('Map operations work correctly', () => {
     const store = createStore();
-    store.eventTypes.set('test-1', {
-      id: 'test-1',
+    store.eventTypes.set('f47ac10b-58cc-4372-a567-0e02b2c3d479', {
+      id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       name: 'Test',
       duration: 30,
       createdAt: new Date().toISOString(),
     });
-    expect(store.eventTypes.get('test-1')?.name).toBe('Test');
-    store.eventTypes.delete('test-1');
-    expect(store.eventTypes.has('test-1')).toBe(false);
+    expect(store.eventTypes.get('f47ac10b-58cc-4372-a567-0e02b2c3d479')?.name).toBe('Test');
+    store.eventTypes.delete('f47ac10b-58cc-4372-a567-0e02b2c3d479');
+    expect(store.eventTypes.has('f47ac10b-58cc-4372-a567-0e02b2c3d479')).toBe(false);
   });
 });

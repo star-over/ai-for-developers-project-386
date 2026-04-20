@@ -71,7 +71,7 @@ describe('Event Types API', () => {
   });
 
   it('DELETE /api/event-types/:id returns 404 for unknown id', async () => {
-    const res = await app.inject({ method: 'DELETE', url: '/api/event-types/unknown' });
+    const res = await app.inject({ method: 'DELETE', url: '/api/event-types/00000000-0000-0000-0000-000000000000' });
     expect(res.statusCode).toBe(404);
   });
 });

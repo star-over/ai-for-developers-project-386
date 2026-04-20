@@ -99,14 +99,14 @@ namespace EventTypes {
 
   @route("/{id}")
   namespace ById {
-    @doc("Partially update an event type by ID") @patch op update(@path id: string, @body body: UpdateEventTypeRequest): EventType | {
+    @doc("Partially update an event type by ID") @patch op update(@path @format("uuid") id: string, @body body: UpdateEventTypeRequest): EventType | {
       @statusCode statusCode: 404;
       @body body: ErrorResponse;
     } | {
       @statusCode statusCode: 400;
       @body body: ErrorResponse;
     };
-    @doc("Delete an event type by ID. Existing bookings are preserved (denormalized).") @delete op delete(@path id: string): {
+    @doc("Delete an event type by ID. Existing bookings are preserved (denormalized).") @delete op delete(@path @format("uuid") id: string): {
       @statusCode statusCode: 204;
     } | {
       @statusCode statusCode: 404;
@@ -145,11 +145,11 @@ namespace Bookings {
 
   @route("/{id}")
   namespace ById {
-    @doc("Get booking details by ID") @get op get(@path id: string): Booking | {
+    @doc("Get booking details by ID") @get op get(@path @format("uuid") id: string): Booking | {
       @statusCode statusCode: 404;
       @body body: ErrorResponse;
     };
-    @doc("Cancel (delete) a booking by ID. Physically removes the record.") @delete op cancel(@path id: string): {
+    @doc("Cancel (delete) a booking by ID. Physically removes the record.") @delete op cancel(@path @format("uuid") id: string): {
       @statusCode statusCode: 204;
     } | {
       @statusCode statusCode: 404;

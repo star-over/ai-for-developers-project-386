@@ -64,6 +64,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: The request has succeeded.
@@ -86,6 +87,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '204':
           description: 'There is no content to send for this request, but the headers may be useful. '
@@ -142,6 +144,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '200':
           description: The request has succeeded.
@@ -176,6 +179,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         '204':
           description: 'There is no content to send for this request, but the headers may be useful. '
