@@ -38,3 +38,12 @@ jobs:
 
       - name: Run quality checks
         run: make check
+
+  deploy:
+    needs: check
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render deploy
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
