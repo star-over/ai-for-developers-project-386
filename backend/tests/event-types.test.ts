@@ -1,6 +1,21 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { buildApp } from '../src/app.js';
 
+describe('Health Endpoint', () => {
+  let app: ReturnType<typeof buildApp>;
+
+  beforeEach(async () => {
+    app = buildApp();
+    await app.ready();
+  });
+
+  it('GET /api/health returns 200 with status ok', async () => {
+    const res = await app.inject({ method: 'GET', url: '/api/health' });
+    expect(res.statusCode).toBe(200);
+    expect(res.json()).toEqual({ status: 'ok' });
+  });
+});
+
 describe('Event Types API', () => {
   let app: ReturnType<typeof buildApp>;
 
