@@ -8,8 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "lint": "eslint src/",
-    "prebuild": "npm run lint"
+    "lint": "eslint src/"
   },
   "keywords": [],
   "author": "",
