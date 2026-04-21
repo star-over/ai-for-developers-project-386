@@ -5,7 +5,7 @@ import globals from 'globals';
 
 export default [
   js.configs.recommended,
-  ...ts.configs.recommended,
+  ...ts.configs.strict,
   ...svelte.configs['flat/recommended'],
   {
     files: ['**/*.svelte'],
