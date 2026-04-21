@@ -67,7 +67,7 @@
 | # | Задача | Статус |
 |---|--------|--------|
 | 22 | E2E тесты (Playwright) | ✅ Done |
-| 23 | Docker | — |
+| 23 | Docker | ✅ Done |
 | 24 | Lint cleanup (warnings) | ✅ Done |
 
 ---

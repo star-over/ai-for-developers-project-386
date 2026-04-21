@@ -57,7 +57,9 @@ Design First: TypeSpec → OpenAPI → раздельная реализация
 - При необходимости мультиязычности — миграция на `svelte-i18n`
 
 ### Деплой
-- **Docker** (multi-stage build)
+- **Docker** (multi-stage build, node:22-alpine, 4 стадии)
+- **Render.com** (Docker runtime, free tier, Virginia)
+- **GitHub Actions** → **Render REST API** (deploy on master after CI pass)
 
 ## Структура проекта
 
@@ -124,28 +126,40 @@ spec/main.tsp → tsp compile → openapi.yaml → orval → frontend/src/lib/ap
 | `make typecheck` | TypeScript check (frontend + backend) |
 | `make test` | Vitest (frontend + backend) |
 | `make test-e2e` | Playwright e2e |
-| `make check` | Full quality gate (lint + typecheck + test) |
+| `make check` | Full quality gate (lint + typecheck + test + build) |
+| `make build` | Build frontend + backend |
+| `make docker-build` | Build Docker image |
+| `make docker-run` | Run Docker container (PORT=10000) |
 
 ## Docker
 
-Один Docker-образ. Бэкенд отдаёт API + статику фронтенда.
+Один Docker-образ. Fastify отдаёт API + статику SPA.
 
-### Multi-stage build:
-1. **Stage 1:** сборка фронтенда (`npm run build` → static files)
-2. **Stage 2:** сборка бэкенда
-3. **Stage 3:** production образ — Node.js сервер отдаёт API + статику из `dist/`
+**Live:** https://ai-for-developers-project-386-g9qt.onrender.com
+
+### Multi-stage build (4 стадии):
+1. **frontend-build** — Vite build → `dist/` (SPA bundle)
+2. **backend-deps** — `npm ci --omit=dev` → только production зависимости
+3. **backend-build** — `npm run build` (tsc → `dist/`)
+4. **production** — копирует из стадий 1–3, non-root user `nodejs`, `ENV NODE_ENV=production`
 
 ### Конфигурация (env):
-- `PORT` — порт сервера (default: 3000)
-- `DATABASE_URL` — путь к SQLite файлу (default: `./data/db.sqlite`)
+- `PORT` — порт сервера (Render передаёт автоматически)
+- `NODE_ENV=production` — задан в Dockerfile
 
 ### Запуск:
 ```bash
-docker build -t calendar .
-docker run -p 3000:3000 -v ./data:/app/data calendar
+make docker-build       # docker build -t calendar .
+make docker-run         # docker run --rm -p 10000:10000 -e PORT=10000 calendar
 ```
 
-SQLite файл персистится через Docker volume.
+### CI/CD:
+```
+git push master → GitHub Actions: check → deploy → Render API → docker build → live
+```
+
+Деплой только после успешного `make check`. Auto-deploy на Render выключен.  
+Детали: `docs/2026-04-21-docker-deploy-design.md`
 
 ## Генерация слотов
 
