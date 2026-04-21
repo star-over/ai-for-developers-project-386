@@ -2,11 +2,25 @@ import js from '@eslint/js';
 import ts from 'typescript-eslint';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
+import tailwindcss from 'eslint-plugin-tailwindcss';
 
 export default [
   js.configs.recommended,
   ...ts.configs.strict,
   ...svelte.configs['flat/recommended'],
+  ...tailwindcss.configs['flat/recommended'],
+  {
+    rules: {
+      'tailwindcss/classnames-order': 'warn',
+      'tailwindcss/no-contradicting-classname': 'error',
+      'tailwindcss/no-custom-classname': 'off',
+    },
+    settings: {
+      tailwindcss: {
+        callees: ['cn', 'clsx', 'tv'],
+      },
+    },
+  },
   {
     files: ['**/*.svelte'],
     languageOptions: {

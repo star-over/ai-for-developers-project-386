@@ -11,7 +11,7 @@
   import { getGuestProfile, saveGuestProfile } from '$lib/stores/guestProfile.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
-  let { eventTypeId, startTime, onCancel }: {
+  const { eventTypeId, startTime, onCancel }: {
     eventTypeId: string;
     startTime: string;
     onCancel?: () => void;

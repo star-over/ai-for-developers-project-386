@@ -4,7 +4,7 @@
   import CalendarIcon from '@lucide/svelte/icons/calendar';
   import { getDurationColors } from '$lib/utils.js';
 
-  let {
+  const {
     name,
     duration,
     actions,

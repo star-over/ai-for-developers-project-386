@@ -11,7 +11,7 @@
   import { t } from '$lib/i18n/index.js';
   import NotFound from './NotFound.svelte';
 
-  let { route }: { route?: RouteResult } = $props();
+  const { route }: { route?: RouteResult } = $props();
 
   const eventTypeId = $derived(String((route?.result?.path?.params as Record<string, string>)?.eventTypeId ?? ''));
 

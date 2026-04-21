@@ -10,7 +10,7 @@
   import { removeBookingId } from '$lib/stores/bookings.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
-  let { id, onCanceled }: { id: string; onCanceled?: () => void } = $props();
+  const { id, onCanceled }: { id: string; onCanceled?: () => void } = $props();
 
   const bookingQuery = createByIdGet(() => id);
   const cancelMutation = createByIdCancel();

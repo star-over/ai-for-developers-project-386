@@ -10,7 +10,7 @@
   import { goto } from '@mateothegreat/svelte5-router';
   import { cn } from '$lib/utils.js';
 
-  let { children } = $props();
+  const { children } = $props();
 
   let open = $state(false);
   let currentPath = $state(window.location.pathname);
@@ -65,7 +65,7 @@
         <button
           type="button"
           class={cn(
-            'flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors hover:bg-accent',
+            'hover:bg-accent flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors',
             isActive({ path: link.path }) && 'bg-accent font-medium',
           )}
           onclick={() => navigate({ path: link.path })}
@@ -84,7 +84,7 @@
         <button
           type="button"
           class={cn(
-            'flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors hover:bg-accent',
+            'hover:bg-accent flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors',
             isActive({ path: link.path }) && 'bg-accent font-medium',
           )}
           onclick={() => navigate({ path: link.path })}

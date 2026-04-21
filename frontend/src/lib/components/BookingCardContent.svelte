@@ -6,7 +6,7 @@
   import MailIcon from '@lucide/svelte/icons/mail';
   import { getDurationColors } from '$lib/utils.js';
 
-  let {
+  const {
     eventTypeName,
     startTime,
     duration,
