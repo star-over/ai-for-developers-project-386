@@ -9,7 +9,6 @@ build/
 frontend/.vite/
 
 # SQLite
-data/
 *.sqlite
 *.sqlite3
 
