@@ -4,6 +4,11 @@ import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import tailwindcss from 'eslint-plugin-tailwindcss';
 import importX from 'eslint-plugin-import-x';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export default [
   js.configs.recommended,
@@ -11,6 +16,7 @@ export default [
   ...svelte.configs['flat/recommended'],
   ...tailwindcss.configs['flat/recommended'],
   {
+    files: ['frontend/**/*.svelte', 'frontend/**/*.ts', 'frontend/**/*.js'],
     rules: {
       'tailwindcss/classnames-order': 'warn',
       'tailwindcss/no-contradicting-classname': 'error',
@@ -19,6 +25,7 @@ export default [
     settings: {
       tailwindcss: {
         callees: ['cn', 'clsx', 'tv'],
+        config: resolve(__dirname, 'frontend/src/app.css'),
       },
     },
   },
@@ -38,7 +45,7 @@ export default [
     rules: {
       'svelte/no-unused-svelte-ignore': 'error',
       'svelte/require-each-key': 'error',
-      'svelte/no-reactive-reassign': 'warn',
+      'svelte/no-reactive-reassign': 'error',
       'svelte/no-target-blank': 'error',
       'svelte/no-at-html-tags': 'warn',
     },
@@ -59,11 +66,15 @@ export default [
       'no-var': 'error',
       'prefer-const': ['warn', { destructuring: 'all' }],
       'no-console': 'warn',
-      'no-unused-expressions': 'error',
     },
   },
   {
     plugins: { 'import-x': importX },
+    settings: {
+      'import-x/resolver': {
+        typescript: { project: ['frontend/tsconfig.json', 'backend/tsconfig.json'] },
+      },
+    },
     rules: {
       'import-x/no-duplicates': 'error',
       'import-x/no-cycle': ['error', { maxDepth: 3 }],

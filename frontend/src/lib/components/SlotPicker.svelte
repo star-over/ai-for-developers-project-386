@@ -34,7 +34,7 @@
 
   $effect(() => {
     // Reset slot when date changes
-    // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-unused-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     selectedDate;
     selectedSlot = null;
   });
@@ -69,7 +69,7 @@
 
   $effect(() => {
     // Re-run when calendar value changes (triggers DOM update)
-    // eslint-disable-next-line no-unused-expressions, @typescript-eslint/no-unused-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     calendarValue;
     hideOutOfRangeRows();
   });

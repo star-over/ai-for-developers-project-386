@@ -12,7 +12,7 @@
 <CalendarPrimitive.HeadCell
 	bind:ref
 	class={cn(
-		"text-muted-foreground rounded-md text-[0.8rem] font-normal",
+		"rounded-md text-[0.8rem] font-normal text-muted-foreground",
 		className
 	)}
 	{...restProps}

@@ -65,7 +65,7 @@
         <button
           type="button"
           class={cn(
-            'hover:bg-accent flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors',
+            'flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors hover:bg-accent',
             isActive({ path: link.path }) && 'bg-accent font-medium',
           )}
           onclick={() => navigate({ path: link.path })}
@@ -84,7 +84,7 @@
         <button
           type="button"
           class={cn(
-            'hover:bg-accent flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors',
+            'flex min-h-[44px] w-full items-center gap-3 rounded-md px-3 text-left text-sm transition-colors hover:bg-accent',
             isActive({ path: link.path }) && 'bg-accent font-medium',
           )}
           onclick={() => navigate({ path: link.path })}
