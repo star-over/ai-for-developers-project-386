@@ -3,6 +3,7 @@ import ts from 'typescript-eslint';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import tailwindcss from 'eslint-plugin-tailwindcss';
+import importX from 'eslint-plugin-import-x';
 
 export default [
   js.configs.recommended,
@@ -59,6 +60,13 @@ export default [
       'prefer-const': ['warn', { destructuring: 'all' }],
       'no-console': 'warn',
       'no-unused-expressions': 'error',
+    },
+  },
+  {
+    plugins: { 'import-x': importX },
+    rules: {
+      'import-x/no-duplicates': 'error',
+      'import-x/no-cycle': ['error', { maxDepth: 3 }],
     },
   },
   {
