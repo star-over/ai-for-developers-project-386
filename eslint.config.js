@@ -29,6 +29,15 @@ export default [
     },
   },
   {
+    rules: {
+      'eqeqeq': 'error',
+      'no-var': 'error',
+      'prefer-const': ['warn', { destructuring: 'all' }],
+      'no-console': 'warn',
+      'no-unused-expressions': 'error',
+    },
+  },
+  {
     ignores: [
       'node_modules/**',
       'frontend/node_modules/**',
