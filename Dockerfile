@@ -27,7 +27,7 @@ WORKDIR /app/backend
 COPY backend/package.json backend/package-lock.json ./
 RUN npm ci
 COPY backend/ ./
-RUN npx tsc
+RUN npm run build
 
 # ============================================
 # Stage 4: Production image
