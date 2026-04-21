@@ -5,6 +5,8 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/star-over/ai-for-developers-project-386/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/star-over/ai-for-developers-project-386/actions)
 
+**Live:** https://ai-for-developers-project-386-g9qt.onrender.com
+
 ## Стек
 
 - **Frontend:** Svelte 5, Vite, Tailwind 4, shadcn-svelte, TanStack Query
