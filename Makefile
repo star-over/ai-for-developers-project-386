@@ -46,11 +46,14 @@ test: ## Vitest (frontend + backend)
 test-e2e: ## Playwright e2e tests
 	cd e2e && npx playwright test
 
-check: lint typecheck test ## Full quality gate (pre-commit)
+build: ## Build frontend
+	cd frontend && npm run build
+
+check: lint typecheck test build ## Full quality gate (pre-commit)
 
 # --- Help ---
 
 help: ## Show available commands
 	@grep -E '^[a-zA-Z0-9_-]+:.*##' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*##"}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: generate dev-frontend dev-backend mock lint lint-fix typecheck test test-e2e check help kill-frontend kill-backend kill-all
+.PHONY: generate dev-frontend dev-backend mock lint lint-fix typecheck test test-e2e build check help kill-frontend kill-backend kill-all
