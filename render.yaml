@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: calendar
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    branch: master
+    region: frankfurt
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: false
