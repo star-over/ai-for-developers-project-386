@@ -19,6 +19,16 @@ export default [
     },
   },
   {
+    files: ['**/*.svelte'],
+    rules: {
+      'svelte/no-unused-svelte-ignore': 'error',
+      'svelte/require-each-key': 'error',
+      'svelte/no-reactive-reassign': 'warn',
+      'svelte/no-target-blank': 'error',
+      'svelte/no-at-html-tags': 'warn',
+    },
+  },
+  {
     files: ['**/*.ts', '**/*.js', '**/*.svelte.ts', '**/*.svelte.js'],
     languageOptions: {
       parser: ts.parser,
