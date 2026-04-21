@@ -39,21 +39,21 @@
 | 20 | Мои записи (LocalStorage) | ✅ Done |
 | 21 | ESLint настройка | ✅ Done |
 
-### Этап 3: Backend — in-memory версия (следующий)
+### Этап 3: Backend — in-memory версия (выполнено)
 
 > **Промежуточная версия:** Map/Array хранилище, данные из JSONL-файлов при старте.
 > Drizzle + SQLite — на будущем этапе. CORS не используется — фронтенд через Vite proxy.
 
-| # | Задача | Зависит от |
-|---|--------|-----------|
-| 3 | Backend scaffolding (Fastify + Zod) | 2 |
-| 4 | In-memory store + JSONL seed | 3 |
-| 5 | Zod-схемы валидации | 3 |
-| 6 | Backend: Event Types CRUD | 4, 5 |
-| 7 | Backend: Slots endpoint | 4, 5 |
-| 8 | Backend: Bookings endpoints | 4, 5 |
-| 9 | Backend: Admin bookings | 4 |
-| 10 | Vite proxy + переключение фронта на бэкенд | 6–9 |
+| # | Задача | Статус |
+|---|--------|--------|
+| 3 | Backend scaffolding (Fastify + Zod) | ✅ Done |
+| 4 | In-memory store + JSONL seed | ✅ Done |
+| 5 | Zod-схемы валидации | ✅ Done |
+| 6 | Backend: Event Types CRUD | ✅ Done |
+| 7 | Backend: Slots endpoint | ✅ Done |
+| 8 | Backend: Bookings endpoints | ✅ Done |
+| 9 | Backend: Admin bookings | ✅ Done |
+| 10 | Vite proxy + переключение фронта на бэкенд | ✅ Done |
 
 ### Этап 3.5: Unit/Integration тесты
 
@@ -67,8 +67,8 @@
 | # | Задача | Статус |
 |---|--------|--------|
 | 22 | E2E тесты (Playwright) | ✅ Done |
-| 23 | Docker | 6–10, 11–20 |
-| 24 | Lint cleanup (warnings) | 21, всё остальное |
+| 23 | Docker | — |
+| 24 | Lint cleanup (warnings) | ✅ Done |
 
 ---
 
