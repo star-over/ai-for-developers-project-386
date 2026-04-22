@@ -30,10 +30,10 @@ kill-all: kill-frontend kill-backend ## Kill frontend + backend processes
 # --- Build ---
 
 build-frontend: ## Build frontend (Vite → dist)
-	cd frontend && npm run build
+	cd frontend && npx vite build -l warn
 
 build-backend: ## Build backend (tsc → dist)
-	cd backend && npm run build
+	cd backend && npx tsc
 
 build: build-frontend build-backend ## Build frontend + backend
 
@@ -60,12 +60,16 @@ typecheck: ## TypeScript check (frontend + backend)
 	cd frontend && npx svelte-check --tsconfig ./tsconfig.json
 	cd backend && npx tsc --noEmit
 
-test: ## Vitest (frontend + backend)
+test-backend: ## Vitest backend
 	cd backend && npx vitest run --reporter=dot
+
+test-frontend: ## Vitest frontend
 	cd frontend && npx vitest run --reporter=dot --passWithNoTests
 
 test-e2e: ## Playwright e2e tests
 	cd e2e && npx playwright test --reporter=dot
+
+test: test-backend test-frontend test-e2e ## All tests (unit + e2e)
 
 check: lint typecheck test build ## Full quality gate (pre-commit)
 
@@ -74,4 +78,4 @@ check: lint typecheck test build ## Full quality gate (pre-commit)
 help: ## Show available commands
 	@grep -E '^[a-zA-Z0-9_-]+:.*##' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*##"}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: generate dev-frontend dev-backend mock lint lint-dev lint-fix typecheck test test-e2e build-frontend build-backend build docker-build docker-run check help kill-frontend kill-backend kill-all
+.PHONY: generate dev-frontend dev-backend mock lint lint-dev lint-fix typecheck test-backend test-frontend test test-e2e build-frontend build-backend build docker-build docker-run check help kill-frontend kill-backend kill-all

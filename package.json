@@ -1,26 +1,7 @@
 {
   "name": "hexlet_llm",
-  "version": "1.0.0",
-  "description": "Упрощённый сервис бронирования времени по мотивам [Cal.com](https://cal.com). Владелец публикует доступные слоты, гость выбирает свободное время и записывается на звонок.",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/star-over/ai-for-developers-project-386.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
-  "bugs": {
-    "url": "https://github.com/star-over/ai-for-developers-project-386/issues"
-  },
-  "homepage": "https://github.com/star-over/ai-for-developers-project-386#readme",
+  "private": true,
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.1",

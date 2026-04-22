@@ -55,20 +55,23 @@ Makefile        # Команды сборки, генерации, тестов
 ## Key Commands
 
 **Always use `make` — never `npm run` directly.**
+Exception: `scripts.build` in package.json is kept for Dockerfile (`npm run build` in Docker stages).
 
 ```bash
-make generate      # TypeSpec → OpenAPI → Orval hooks
-make dev-frontend  # Vite dev server (port 5173)
-make dev-backend   # Fastify dev server (port 3000)
-make mock          # Prism mock server (port 4010)
-make lint          # ESLint strict (errors + warnings block, for pre-commit)
-make lint-dev      # ESLint dev (only errors block, warnings pass)
-make lint-fix      # ESLint autofix
-make typecheck     # TypeScript check (frontend + backend)
-make test          # Vitest (frontend + backend)
-make test-e2e      # Playwright e2e
-make check         # Full quality gate (pre-commit hook)
-make help          # Show available commands
+make generate       # TypeSpec → OpenAPI → Orval hooks
+make dev-frontend   # Vite dev server (port 5173)
+make dev-backend    # Fastify dev server (port 3000)
+make mock           # Prism mock server (port 4010)
+make lint           # ESLint strict (errors + warnings block, for pre-commit)
+make lint-dev       # ESLint dev (only errors block, warnings pass)
+make lint-fix       # ESLint autofix
+make typecheck      # TypeScript check (frontend + backend)
+make test-backend   # Vitest backend
+make test-frontend  # Vitest frontend
+make test-e2e       # Playwright e2e
+make test           # All tests (backend + frontend + e2e)
+make check          # Full quality gate (pre-commit hook)
+make help           # Show available commands
 ```
 
 ## Linting Policy

@@ -124,8 +124,10 @@ spec/main.tsp → tsp compile → openapi.yaml → orval → frontend/src/lib/ap
 | `make mock` | Prism mock server (port 4010) |
 | `make lint` / `make lint-fix` | ESLint check / autofix |
 | `make typecheck` | TypeScript check (frontend + backend) |
-| `make test` | Vitest (frontend + backend) |
+| `make test-backend` | Vitest backend |
+| `make test-frontend` | Vitest frontend |
 | `make test-e2e` | Playwright e2e |
+| `make test` | All tests (backend + frontend + e2e) |
 | `make check` | Full quality gate (lint + typecheck + test + build) |
 | `make build` | Build frontend + backend |
 | `make docker-build` | Build Docker image |
