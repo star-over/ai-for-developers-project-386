@@ -33,10 +33,14 @@
 		return new DateFormatter(locale, { year: yearFormat }).format(dateObj);
 	}
 
+	function capitalize(str: string) {
+		return str.charAt(0).toUpperCase() + str.slice(1);
+	}
+
 	function formatMonth(date: DateValue) {
 		const dateObj = date.toDate(getLocalTimeZone());
 		if (typeof monthFormat === "function") return monthFormat(dateObj.getMonth() + 1);
-		return new DateFormatter(locale, { month: monthFormat }).format(dateObj);
+		return capitalize(new DateFormatter(locale, { month: monthFormat }).format(dateObj));
 	}
 </script>
 
