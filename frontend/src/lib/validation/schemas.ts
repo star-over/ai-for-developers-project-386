@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { VALID_DURATIONS } from '../../../../shared/constants.js';
 
 export const bookingSchema = z.object({
   guestName: z
@@ -18,7 +19,7 @@ export const eventTypeSchema = z.object({
     .describe('Название типа события'),
   duration: z
     .number()
-    .refine((v) => [10, 15, 20, 30].includes(v), 'Недопустимая длительность')
+    .refine((v) => (VALID_DURATIONS as readonly number[]).includes(v), 'Недопустимая длительность')
     .describe('Длительность встречи в минутах'),
 });
 

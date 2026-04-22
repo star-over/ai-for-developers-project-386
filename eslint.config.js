@@ -65,10 +65,26 @@ export default [
   },
   {
     rules: {
+      // --- errors: ломают билд или вызывают баги ---
       'eqeqeq': 'error',
       'no-var': 'error',
+
+      // --- warnings: стиль и качество кода ---
       'prefer-const': ['warn', { destructuring: 'all' }],
       'no-console': 'warn',
+
+      // ts-strict overrides: style/quality → warn (не ломают билд)
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+      '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-empty-object-type': 'warn',
+      '@typescript-eslint/no-extraneous-class': 'warn',
+      '@typescript-eslint/no-invalid-void-type': 'warn',
+      '@typescript-eslint/no-dynamic-delete': 'warn',
+      '@typescript-eslint/unified-signatures': 'warn',
+      '@typescript-eslint/no-useless-constructor': 'warn',
+      '@typescript-eslint/prefer-literal-enum-member': 'warn',
     },
   },
   {

@@ -1,10 +1,1 @@
-/**
- * Фиксированный размер слота в минутах.
- * Сетка расписания всегда 30-минутная: любое событие (10/15/20/30 мин)
- * занимает слот целиком. Даже если встреча длится 10 минут,
- * слот 09:00–09:30 считается полностью занятым.
- */
-export const SLOT_DURATION = 30;
-
-export const WORK_START_HOUR = 9;
-export const WORK_END_HOUR = 17;
+export { SLOT_DURATION, WORK_START_HOUR, WORK_END_HOUR } from '../../shared/constants.js';

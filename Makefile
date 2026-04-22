@@ -47,7 +47,10 @@ docker-run: ## Run Docker container (PORT=10000)
 
 # --- Quality ---
 
-lint: ## ESLint check
+lint: ## ESLint strict (errors + warnings block, for pre-commit)
+	npx eslint . --max-warnings 0
+
+lint-dev: ## ESLint dev (only errors block, warnings shown but pass)
 	npx eslint .
 
 lint-fix: ## ESLint autofix
@@ -71,4 +74,4 @@ check: lint typecheck test build ## Full quality gate (pre-commit)
 help: ## Show available commands
 	@grep -E '^[a-zA-Z0-9_-]+:.*##' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*##"}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: generate dev-frontend dev-backend mock lint lint-fix typecheck test test-e2e build-frontend build-backend build docker-build docker-run check help kill-frontend kill-backend kill-all
+.PHONY: generate dev-frontend dev-backend mock lint lint-dev lint-fix typecheck test test-e2e build-frontend build-backend build docker-build docker-run check help kill-frontend kill-backend kill-all

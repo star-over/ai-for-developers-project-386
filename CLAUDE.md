@@ -28,6 +28,10 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 ### Validation
 - Zod (frontend + backend, shared validation schemas)
 - Zod schemas: `.describe()` on every field + custom error messages for AI-agent context
+- Shared constants (`shared/constants.js`): `VALID_DURATIONS`, `SLOT_DURATION`, `WORK_START_HOUR`, `WORK_END_HOUR`
+- Backend `validation.ts`: atomic schemas (`UuidSchema`, `DurationSchema`, `IsoDatetimeSchema`) + API schemas + record schemas
+- Frontend `schemas.ts`: form validation with Russian messages, imports `VALID_DURATIONS` from shared
+- Never duplicate Zod schemas or constants — single source of truth through `shared/` and `validation.ts`
 
 ### Tooling
 - TypeSpec → OpenAPI 3.x
@@ -39,6 +43,7 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 ## Project Structure
 
 ```
+shared/         # Общие константы (JS + .d.ts) для frontend и backend
 spec/           # TypeSpec → OpenAPI
 frontend/       # Svelte 5 SPA
 backend/        # Fastify API + SQLite
@@ -56,7 +61,8 @@ make generate      # TypeSpec → OpenAPI → Orval hooks
 make dev-frontend  # Vite dev server (port 5173)
 make dev-backend   # Fastify dev server (port 3000)
 make mock          # Prism mock server (port 4010)
-make lint          # ESLint check
+make lint          # ESLint strict (errors + warnings block, for pre-commit)
+make lint-dev      # ESLint dev (only errors block, warnings pass)
 make lint-fix      # ESLint autofix
 make typecheck     # TypeScript check (frontend + backend)
 make test          # Vitest (frontend + backend)
@@ -67,8 +73,10 @@ make help          # Show available commands
 
 ## Linting Policy
 
-- **errors** — только то, что ломает билд
-- **warnings** — форматирование и стиль (Airbnb)
+- **errors** — только то, что ломает билд или вызывает баги (`eqeqeq`, `no-var`, `import-x/no-cycle`, etc.)
+- **warnings** — стиль и качество кода (`no-explicit-any`, `no-unused-vars`, `no-non-null-assertion`, `ban-ts-comment`, etc.)
+- `make lint` (pre-commit) — `--max-warnings 0`, любой warning = fail
+- `make lint-dev` (разработка) — warnings показываются, но не блокируют
 - При имплементации фокус на errors, warnings устраняются отдельным этапом
 
 ## Code Style

@@ -11,5 +11,5 @@
       "$lib/*": ["./src/lib/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../shared/**/*"]
 }

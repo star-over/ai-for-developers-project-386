@@ -1,8 +1,27 @@
 import { z } from 'zod';
 import type { FastifyReply } from 'fastify';
+import { VALID_DURATIONS } from '../../shared/constants.js';
+
+// --- Atomic building blocks (single source of truth) ---
+
+export const UuidSchema = z.string().uuid('must be a valid UUID').describe('UUID v4 identifier');
+
+const durationStrings = VALID_DURATIONS.map(String) as unknown as readonly [string, string, ...string[]];
+export const DurationSchema = z.enum(durationStrings).transform(Number)
+  .or(z.union([
+    z.literal(VALID_DURATIONS[0]),
+    z.literal(VALID_DURATIONS[1]),
+    z.literal(VALID_DURATIONS[2]),
+    z.literal(VALID_DURATIONS[3]),
+  ]))
+  .describe('Meeting duration in minutes');
+
+export const IsoDatetimeSchema = z.string().datetime('Invalid datetime format').describe('UTC ISO 8601 datetime');
+
+// --- API request schemas (compose from atoms) ---
 
 export const IdParamSchema = z.object({
-  id: z.string().uuid('id must be a valid UUID').describe('Resource ID (UUID v4)'),
+  id: UuidSchema.describe('Resource ID (UUID v4)'),
 });
 
 export const parseIdParam = async ({ params, reply }: { params: unknown; reply: FastifyReply }): Promise<string | null> => {
@@ -13,10 +32,6 @@ export const parseIdParam = async ({ params, reply }: { params: unknown; reply: 
   }
   return parsed.data.id;
 };
-
-export const DurationSchema = z.enum(['10', '15', '20', '30']).transform(Number)
-  .or(z.literal(10).or(z.literal(15)).or(z.literal(20)).or(z.literal(30)))
-  .describe('Meeting duration in minutes');
 
 export const CreateEventTypeSchema = z.object({
   name: z.string().min(1, 'Name must not be empty').describe('Display name of the event type'),
@@ -29,13 +44,34 @@ export const UpdateEventTypeSchema = z.object({
 });
 
 export const CreateBookingSchema = z.object({
-  eventTypeId: z.string().uuid('eventTypeId must be a valid UUID').describe('ID of the event type to book (UUID v4)'),
+  eventTypeId: UuidSchema.describe('ID of the event type to book (UUID v4)'),
   guestName: z.string().min(1, 'Name must not be empty').describe('Guest name'),
   guestEmail: z.string().email('Invalid email address').describe('Guest email'),
-  startTime: z.string().datetime('Invalid datetime format').describe('Slot start time in UTC ISO 8601'),
+  startTime: IsoDatetimeSchema.describe('Slot start time in UTC ISO 8601'),
 });
 
 export const SlotsQuerySchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be YYYY-MM-DD format').describe('Date for slot lookup'),
-  eventTypeId: z.string().uuid('eventTypeId must be a valid UUID').describe('Event type ID (UUID v4)'),
+  eventTypeId: UuidSchema.describe('Event type ID (UUID v4)'),
+});
+
+// --- Full record schemas (for seed data validation & store integrity) ---
+
+export const EventTypeRecordSchema = z.object({
+  id: UuidSchema.describe('Event type ID'),
+  name: z.string().min(1, 'Name must not be empty').describe('Display name'),
+  duration: DurationSchema.describe('Duration in minutes'),
+  createdAt: IsoDatetimeSchema.describe('Creation timestamp'),
+});
+
+export const BookingRecordSchema = z.object({
+  id: UuidSchema.describe('Booking ID'),
+  eventTypeId: UuidSchema.describe('Referenced event type ID'),
+  eventTypeName: z.string().min(1).describe('Denormalized event type name'),
+  duration: DurationSchema.describe('Denormalized duration'),
+  guestName: z.string().min(1, 'Name must not be empty').describe('Guest name'),
+  guestEmail: z.string().email('Invalid email address').describe('Guest email'),
+  startTime: IsoDatetimeSchema.describe('Slot start time'),
+  endTime: IsoDatetimeSchema.describe('Slot end time'),
+  createdAt: IsoDatetimeSchema.describe('Creation timestamp'),
 });

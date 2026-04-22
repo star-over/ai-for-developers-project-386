@@ -1,11 +1,14 @@
 import { readFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import type { VALID_DURATIONS } from '../../shared/constants.js';
+
+type Duration = (typeof VALID_DURATIONS)[number];
 
 export interface EventType {
   id: string;
   name: string;
-  duration: 10 | 15 | 20 | 30;
+  duration: Duration;
   createdAt: string;
 }
 
@@ -13,7 +16,7 @@ export interface Booking {
   id: string;
   eventTypeId: string;
   eventTypeName: string;
-  duration: 10 | 15 | 20 | 30;
+  duration: Duration;
   guestName: string;
   guestEmail: string;
   startTime: string;
