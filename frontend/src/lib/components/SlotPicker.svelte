@@ -14,10 +14,10 @@
   const tz = getLocalTimeZone();
   const selectableMin = today(tz);
   const selectableMax = today(tz).add({ days: 13 });
-  const displayMin = today(tz).subtract({ days: 7 });
-  const displayMax = today(tz).add({ days: 20 });
-  const minValue = displayMin;
-  const maxValue = displayMax;
+  const displayMin = selectableMin;
+  const displayMax = selectableMax;
+  const minValue = today(tz).subtract({ days: 31 });
+  const maxValue = today(tz).add({ days: 61 });
   const spansMonths = selectableMin.month !== selectableMax.month;
   const numberOfMonths = spansMonths ? 2 : 1;
 
@@ -87,6 +87,14 @@
   /* Stack months vertically even on desktop */
   :global(.hide-disabled-weeks > div) {
     flex-direction: column;
+  }
+  /* Show weekday header (пн вт …) only for the first month */
+  :global(.hide-disabled-weeks > div > div + div thead) {
+    display: none;
+  }
+  /* Reduce month header height — nav is hidden, no need for extra space */
+  :global(.hide-disabled-weeks header) {
+    height: auto;
   }
   /* Tint weekend columns (Sat=6th, Sun=7th) */
   :global(.hide-disabled-weeks td:nth-child(6) [data-bits-day]:not([data-selected]):not([data-disabled])),

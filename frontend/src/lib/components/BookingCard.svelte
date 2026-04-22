@@ -17,7 +17,7 @@
   let dialogOpen = $state(false);
 
   $effect(() => {
-    if (bookingQuery.isError) {
+    if (bookingQuery.isError || (bookingQuery.isSuccess && bookingQuery.data?.status !== 200)) {
       removeBookingId({ id });
     }
   });
