@@ -1,8 +1,13 @@
 <script lang="ts">
   import { createSlotsList } from '$lib/api/default/default.js';
+  import type { Slot } from '$lib/api/model/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Calendar } from '$lib/components/ui/calendar/index.js';
   import { t } from '$lib/i18n/index.js';
+  import { cn } from '$lib/utils.js';
+  import SunriseIcon from '@lucide/svelte/icons/sunrise';
+  import SunIcon from '@lucide/svelte/icons/sun';
+  import SunsetIcon from '@lucide/svelte/icons/sunset';
   import { today, getLocalTimeZone, type DateValue } from '@internationalized/date';
   import { tick } from 'svelte';
 
@@ -53,6 +58,20 @@
     onSlotSelect(startTime);
   };
 
+  const groupSlotsByTimeOfDay = ({ slots }: { slots: Slot[] }) => {
+    const morning = slots.filter((s: Slot) => new Date(s.startTime).getHours() < 12);
+    const afternoon = slots.filter((s: Slot) => {
+      const h = new Date(s.startTime).getHours();
+      return h >= 12 && h < 17;
+    });
+    const evening = slots.filter((s: Slot) => new Date(s.startTime).getHours() >= 17);
+    return [
+      { label: t.booking.morning, icon: SunriseIcon, slots: morning },
+      { label: t.booking.afternoon, icon: SunIcon, slots: afternoon },
+      { label: t.booking.evening, icon: SunsetIcon, slots: evening },
+    ].filter((g) => g.slots.length > 0);
+  };
+
   const hideOutOfRangeRows = async () => {
     await tick();
     const rows = document.querySelectorAll('.hide-disabled-weeks tbody tr');
@@ -91,6 +110,14 @@
   /* Show weekday header (пн вт …) only for the first month */
   :global(.hide-disabled-weeks > div > div + div thead) {
     display: none;
+  }
+  /* Add spacing above second month header to separate from previous month's dates.
+     Match gap to first month: "Апрель 2026" → weekday row ≈ 5px,
+     so "Май 2026" → first date row should also be ≈ 5px.
+     Hidden thead leaves native gap; use negative margin to close it. */
+  :global(.hide-disabled-weeks > div > div + div header) {
+    margin-top: 0.75rem;
+    margin-bottom: -0.75rem;
   }
   /* Reduce month header height — nav is hidden, no need for extra space */
   :global(.hide-disabled-weeks header) {
@@ -138,16 +165,30 @@
   {:else if query.data?.status !== 200 || query.data.data.length === 0}
     <p class="text-sm text-muted-foreground">{t.booking.slotsEmpty}</p>
   {:else}
-    <div class="grid grid-cols-3 gap-2">
-      {#each query.data.data as slot (slot.startTime)}
-        <Button
-          variant={selectedSlot === slot.startTime ? 'default' : 'outline'}
-          disabled={!slot.available}
-          class="h-10"
-          onclick={() => slot.available && selectSlot({ startTime: slot.startTime })}
-        >
-          {formatTime({ isoStr: slot.startTime })}
-        </Button>
+    {@const groups = groupSlotsByTimeOfDay({ slots: query.data.data as Slot[] })}
+    <div class="flex flex-col gap-4">
+      {#each groups as group (group.label)}
+        <div>
+          <div class="mb-2 flex items-center gap-1.5">
+            <group.icon class="h-3.5 w-3.5 text-muted-foreground" />
+            <span class="text-xs font-medium uppercase tracking-wider text-muted-foreground">{group.label}</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            {#each group.slots as slot (slot.startTime)}
+              <Button
+                variant={selectedSlot === slot.startTime ? 'default' : 'outline'}
+                disabled={!slot.available}
+                class={cn(
+                  'h-10',
+                  !slot.available && 'border-muted bg-muted/50 line-through opacity-40',
+                )}
+                onclick={() => slot.available && selectSlot({ startTime: slot.startTime })}
+              >
+                {formatTime({ isoStr: slot.startTime })}
+              </Button>
+            {/each}
+          </div>
+        </div>
       {/each}
     </div>
   {/if}

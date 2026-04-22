@@ -10,7 +10,7 @@
     <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10 text-destructive">
       <TriangleAlert class="h-10 w-10" />
     </div>
-    <h1 class="text-2xl font-bold">{t.notFound.title}</h1>
+    <h1 class="font-display text-2xl font-bold">{t.notFound.title}</h1>
     <p class="mt-2 text-muted-foreground">{t.notFound.subtitle}</p>
     <Button class="mt-6 w-full max-w-xs" onclick={() => goto('/')}>
       {t.notFound.cta}

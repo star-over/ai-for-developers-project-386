@@ -31,49 +31,44 @@
   const colors = $derived(getDurationColors({ duration }));
 </script>
 
-<div class="flex items-start gap-4 border-l-4 py-1 pl-4 {colors.border}">
+<div class="flex items-start gap-3 border-l-4 py-1 pl-3 {colors.border}">
   <div class="min-w-0 flex-1">
-    <!-- Title -->
-    <p class="truncate text-base font-semibold leading-snug">{eventTypeName}</p>
+    <p class="truncate text-sm font-semibold leading-snug">{eventTypeName}</p>
 
-    <!-- Date & time row -->
-    <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-      <span class="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <CalendarIcon class="h-3.5 w-3.5 shrink-0" />
+    <div class="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
+      <span class="flex items-center gap-1 text-xs text-muted-foreground">
+        <CalendarIcon class="h-3 w-3 shrink-0" />
         {formatDate({ isoStr: startTime })}
       </span>
-      <span class="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <ClockIcon class="h-3.5 w-3.5 shrink-0" />
+      <span class="flex items-center gap-1 text-xs text-muted-foreground">
+        <ClockIcon class="h-3 w-3 shrink-0" />
         {formatTime({ isoStr: startTime })}
       </span>
     </div>
 
-    <!-- Guest info (admin view) -->
     {#if guestName || guestEmail}
-      <div class="mt-1.5 flex flex-wrap gap-x-4 gap-y-1">
+      <div class="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
         {#if guestName}
-          <span class="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <UserIcon class="h-3.5 w-3.5 shrink-0" />
+          <span class="flex items-center gap-1 text-xs text-muted-foreground">
+            <UserIcon class="h-3 w-3 shrink-0" />
             {guestName}
           </span>
         {/if}
         {#if guestEmail}
-          <span class="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <MailIcon class="h-3.5 w-3.5 shrink-0" />
+          <span class="flex items-center gap-1 text-xs text-muted-foreground">
+            <MailIcon class="h-3 w-3 shrink-0" />
             {guestEmail}
           </span>
         {/if}
       </div>
     {/if}
 
-    <!-- Duration badge -->
-    <span class="mt-2.5 inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium {colors.badge}">
+    <span class="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium {colors.badge}">
       <ClockIcon class="h-3 w-3" />
       {duration} мин
     </span>
   </div>
 
-  <!-- Action slot -->
   {#if actions}
     <div class="shrink-0 self-start">
       {@render actions()}

@@ -3,12 +3,13 @@
   import { createEventTypesList } from '$lib/api/default/default.js';
   import SlotPicker from '$lib/components/SlotPicker.svelte';
   import BookingForm from '$lib/components/BookingForm.svelte';
-  import { Badge } from '$lib/components/ui/badge/index.js';
   import ResponsiveModal from '$lib/components/ResponsiveModal.svelte';
   import { getSelectedEventType } from '$lib/stores/selectedEventType.svelte.js';
   import BookingCardContent from '$lib/components/BookingCardContent.svelte';
   import * as Card from '$lib/components/ui/card/index.js';
   import { t } from '$lib/i18n/index.js';
+  import ClockIcon from '@lucide/svelte/icons/clock';
+  import { getDurationColors } from '$lib/utils.js';
   import NotFound from './NotFound.svelte';
 
   const { route }: { route?: RouteResult } = $props();
@@ -48,9 +49,13 @@
   {#if query.isPending}
     <div class="h-8 w-48 animate-pulse rounded bg-muted"></div>
   {:else if displayEventType}
-    <div class="mb-6">
-      <h1 class="text-xl font-bold">{displayEventType.name}</h1>
-      <Badge variant="secondary" class="mt-1">{displayEventType.duration} {t.eventTypes.minutes}</Badge>
+    {@const colors = getDurationColors({ duration: displayEventType.duration })}
+    <div class="mb-6 border-l-4 pl-3 {colors.border}">
+      <p class="text-sm font-semibold leading-snug">{displayEventType.name}</p>
+      <span class="mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium {colors.badge}">
+        <ClockIcon class="h-3 w-3" />
+        {displayEventType.duration} {t.eventTypes.minutes}
+      </span>
     </div>
   {/if}
 
@@ -61,8 +66,8 @@
 
 {#snippet bookingSummary()}
   {#if displayEventType && selectedSlot}
-    <Card.Root class="mx-4 my-2">
-      <Card.Content class="p-4">
+    <Card.Root class="mx-4 -mt-2 mb-2 gap-0 overflow-visible rounded-xl py-0">
+      <Card.Content class="p-2">
         <BookingCardContent
           eventTypeName={displayEventType.name}
           startTime={selectedSlot}
@@ -77,7 +82,7 @@
   {@render bookingSummary()}
   <div class="px-4 py-2">
     {#if selectedSlot}
-      <BookingForm {eventTypeId} startTime={selectedSlot} onCancel={closeForm} />
+      <BookingForm {eventTypeId} startTime={selectedSlot} />
     {/if}
   </div>
 </ResponsiveModal>

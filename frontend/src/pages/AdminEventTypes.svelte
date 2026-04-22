@@ -94,7 +94,7 @@
 
 <div class="mx-auto max-w-lg p-4">
   <div class="mb-6 flex items-center justify-between">
-    <h1 class="text-2xl font-bold">{t.admin.eventTypes.title}</h1>
+    <h1 class="font-display text-2xl font-bold">{t.admin.eventTypes.title}</h1>
     <Button onclick={openCreate}>{t.admin.eventTypes.create}</Button>
   </div>
 
@@ -111,9 +111,9 @@
     <p class="text-center text-muted-foreground">{t.admin.eventTypes.empty}</p>
   {:else}
     <div class="flex flex-col gap-3">
-      {#each query.data.data as et (et.id)}
-        <Card.Root>
-          <Card.Content class="p-4">
+      {#each query.data.data as et, i (et.id)}
+        <Card.Root class="animate-fade-in-up" style="animation-delay: {i * 60}ms">
+          <Card.Content class="px-4 py-3">
             <EventTypeCardContent name={et.name} duration={et.duration}>
               {#snippet actions()}
                 <DropdownMenu.Root>

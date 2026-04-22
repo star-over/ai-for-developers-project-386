@@ -18,7 +18,7 @@
 </script>
 
 <div class="mx-auto max-w-lg p-4">
-  <h1 class="mb-6 text-2xl font-bold">{t.eventTypes.title}</h1>
+  <h1 class="mb-6 font-display text-2xl font-bold">{t.eventTypes.title}</h1>
 
   {#if query.isPending}
     {#each [1, 2, 3] as i (i)}
@@ -33,14 +33,15 @@
     <p class="text-center text-muted-foreground">{t.eventTypes.empty}</p>
   {:else}
     <div class="flex flex-col gap-3">
-      {#each query.data.data as eventType (eventType.id)}
+      {#each query.data.data as eventType, i (eventType.id)}
         <button
           type="button"
-          class="w-full text-left"
+          class="animate-fade-in-up w-full text-left"
+          style="animation-delay: {i * 60}ms"
           onclick={() => navigate({ eventType })}
         >
-          <Card.Root class="cursor-pointer transition-colors hover:bg-accent/50">
-            <Card.Content class="p-4">
+          <Card.Root class="cursor-pointer transition-all hover:shadow-md active:scale-[0.98]">
+            <Card.Content class="px-4 py-3">
               <EventTypeCardContent name={eventType.name} duration={eventType.duration}>
                 {#snippet actions()}
                   <ArrowRightIcon class="h-4 w-4 text-muted-foreground" />

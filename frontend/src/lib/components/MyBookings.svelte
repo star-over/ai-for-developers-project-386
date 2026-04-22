@@ -7,7 +7,7 @@
 </script>
 
 <div>
-  <h2 class="mb-4 text-xl font-bold">{t.myBookings.title}</h2>
+  <h2 class="mb-4 font-display text-xl font-bold">{t.myBookings.title}</h2>
 
   {#if ids.length === 0}
     <p class="text-center text-muted-foreground">{t.myBookings.empty}</p>

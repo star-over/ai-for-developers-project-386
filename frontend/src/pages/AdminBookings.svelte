@@ -9,7 +9,7 @@
 </script>
 
 <div class="mx-auto max-w-lg p-4">
-  <h1 class="mb-6 text-2xl font-bold">{t.admin.bookings.title}</h1>
+  <h1 class="mb-6 font-display text-2xl font-bold">{t.admin.bookings.title}</h1>
 
   {#if query.isPending}
     {#each [1, 2, 3] as i (i)}
@@ -24,8 +24,8 @@
     <p class="text-center text-muted-foreground">{t.admin.bookings.empty}</p>
   {:else}
     <div class="flex flex-col gap-3">
-      {#each query.data.data as booking (booking.id)}
-        <Card.Root>
+      {#each query.data.data as booking, i (booking.id)}
+        <Card.Root class="animate-fade-in-up" style="animation-delay: {i * 60}ms">
           <Card.Content class="p-4">
             <BookingCardContent
               eventTypeName={booking.eventTypeName}

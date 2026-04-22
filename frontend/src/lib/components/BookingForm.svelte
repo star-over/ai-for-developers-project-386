@@ -11,10 +11,9 @@
   import { getGuestProfile, saveGuestProfile } from '$lib/stores/guestProfile.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
-  const { eventTypeId, startTime, onCancel }: {
+  const { eventTypeId, startTime }: {
     eventTypeId: string;
     startTime: string;
-    onCancel?: () => void;
   } = $props();
 
   const profile = getGuestProfile();
@@ -65,8 +64,15 @@
 
 <form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="flex flex-col gap-4">
   {#if success}
-    <div class="rounded-md bg-green-50 p-4 text-center text-green-700">
-      {t.booking.success}
+    <div class="flex flex-col items-center gap-3 rounded-xl bg-primary/10 p-6 text-center">
+      <div class="animate-scale-check flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <p class="animate-fade-in-up text-sm font-medium text-primary" style="animation-delay: 200ms">
+        {t.booking.success}
+      </p>
     </div>
   {:else}
     <div class="flex flex-col gap-1">
@@ -109,15 +115,8 @@
       <p class="text-sm text-destructive">{serverError}</p>
     {/if}
 
-    <div class="flex flex-col gap-2 sm:flex-row sm:justify-end">
-      {#if onCancel}
-        <Button type="button" variant="outline" onclick={onCancel}>
-          {t.booking.form.cancel}
-        </Button>
-      {/if}
-      <Button type="submit" disabled={mutation.isPending} class={onCancel ? '' : 'w-full'}>
-        {mutation.isPending ? t.common.loading : t.booking.form.submit}
-      </Button>
-    </div>
+    <Button type="submit" disabled={mutation.isPending} class="w-full">
+      {mutation.isPending ? t.common.loading : t.booking.form.submit}
+    </Button>
   {/if}
 </form>

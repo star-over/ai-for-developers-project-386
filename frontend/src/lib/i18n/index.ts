@@ -24,6 +24,9 @@ export const t = {
     slotsEmpty: 'Нет доступных слотов',
     slotFree: 'Свободно',
     slotTaken: 'Занято',
+    morning: 'Утро',
+    afternoon: 'День',
+    evening: 'Вечер',
     continue: 'Продолжить',
     formTitle: 'Ваши данные',
     form: {

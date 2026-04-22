@@ -53,14 +53,16 @@
           <Sheet.Description>{description}</Sheet.Description>
         {/if}
       </Sheet.Header>
-      {#if children}
-        {@render children()}
-      {/if}
-      {#if footer}
-        <Sheet.Footer class="px-4 pb-4">
-          {@render footer()}
-        </Sheet.Footer>
-      {/if}
+      <div class="min-h-0 flex-1 overflow-y-auto">
+        {#if children}
+          {@render children()}
+        {/if}
+        {#if footer}
+          <Sheet.Footer class="px-4 pb-4">
+            {@render footer()}
+          </Sheet.Footer>
+        {/if}
+      </div>
     </Sheet.Content>
   </Sheet.Root>
 {/if}
