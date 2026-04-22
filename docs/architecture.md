@@ -138,10 +138,12 @@ spec/main.tsp → tsp compile → openapi.yaml → orval → frontend/src/lib/ap
 **Live:** https://ai-for-developers-project-386-g9qt.onrender.com
 
 ### Multi-stage build (4 стадии):
-1. **frontend-build** — Vite build → `dist/` (SPA bundle)
+1. **frontend-build** — копирует `shared/`, Vite build → `dist/` (SPA bundle)
 2. **backend-deps** — `npm ci --omit=dev` → только production зависимости
-3. **backend-build** — `npm run build` (tsc → `dist/`)
-4. **production** — копирует из стадий 1–3, non-root user `nodejs`, `ENV NODE_ENV=production`
+3. **backend-build** — копирует `shared/`, `npm run build` (tsc → `dist/`)
+4. **production** — `WORKDIR /app/backend`, копирует из стадий 1–3 + `shared/`, non-root user `nodejs`, `ENV NODE_ENV=production`
+
+> `shared/` содержит общие константы (`VALID_DURATIONS`, `SLOT_DURATION`, `WORK_*_HOUR`), импортируемые frontend и backend через относительные пути. Production WORKDIR = `/app/backend`, чтобы скомпилированный JS резолвил `../../shared/constants.js` → `/app/shared/`.
 
 ### Конфигурация (env):
 - `PORT` — порт сервера (Render передаёт автоматически)
