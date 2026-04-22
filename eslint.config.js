@@ -14,7 +14,10 @@ export default [
   js.configs.recommended,
   ...ts.configs.strict,
   ...svelte.configs['flat/recommended'],
-  ...tailwindcss.configs['flat/recommended'],
+  ...tailwindcss.configs['flat/recommended'].map((config) => ({
+    ...config,
+    files: ['frontend/**/*.svelte', 'frontend/**/*.ts', 'frontend/**/*.js'],
+  })),
   {
     files: ['frontend/**/*.svelte', 'frontend/**/*.ts', 'frontend/**/*.js'],
     rules: {
@@ -72,7 +75,10 @@ export default [
     plugins: { 'import-x': importX },
     settings: {
       'import-x/resolver': {
-        typescript: { project: ['frontend/tsconfig.json', 'backend/tsconfig.json'] },
+        typescript: {
+          project: ['frontend/tsconfig.json', 'backend/tsconfig.json'],
+          noWarnOnMultipleProjects: true,
+        },
       },
     },
     rules: {
