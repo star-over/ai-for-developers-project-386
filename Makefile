@@ -61,11 +61,11 @@ typecheck: ## TypeScript check (frontend + backend)
 	cd backend && npx tsc --noEmit
 
 test: ## Vitest (frontend + backend)
-	cd backend && npx vitest run
-	cd frontend && npx vitest run --passWithNoTests
+	cd backend && npx vitest run --reporter=dot
+	cd frontend && npx vitest run --reporter=dot --passWithNoTests
 
 test-e2e: ## Playwright e2e tests
-	cd e2e && npx playwright test
+	cd e2e && npx playwright test --reporter=dot
 
 check: lint typecheck test build ## Full quality gate (pre-commit)
 
