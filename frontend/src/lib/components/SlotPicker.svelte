@@ -19,8 +19,6 @@
   const tz = getLocalTimeZone();
   const selectableMin = today(tz);
   const selectableMax = today(tz).add({ days: 13 });
-  const displayMin = selectableMin;
-  const displayMax = selectableMax;
   const minValue = today(tz).subtract({ days: 31 });
   const maxValue = today(tz).add({ days: 61 });
   const spansMonths = selectableMin.month !== selectableMax.month;
@@ -29,19 +27,20 @@
   const isDateDisabled = (date: DateValue) =>
     date.compare(selectableMin) < 0 || date.compare(selectableMax) > 0;
 
-  const displayMinStr = displayMin.toString();
-  const displayMaxStr = displayMax.toString();
+  const selectableMinStr = selectableMin.toString();
+  const selectableMaxStr = selectableMax.toString();
 
   let calendarValue = $state<DateValue | undefined>(selectableMin);
   let selectedSlot = $state<string | null>(null);
 
   const selectedDate = $derived(calendarValue ? calendarValue.toString() : minValue.toString());
 
+  let prevDate = $state(selectableMin.toString());
   $effect(() => {
-    // Reset slot when date changes
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    selectedDate;
-    selectedSlot = null;
+    if (selectedDate !== prevDate) {
+      prevDate = selectedDate;
+      selectedSlot = null;
+    }
   });
 
   const query = $derived(
@@ -75,7 +74,7 @@
       if (days.length === 0) return;
       const hasVisibleDay = Array.from(days).some((d) => {
         const v = d.getAttribute('data-value') ?? '';
-        return v >= displayMinStr && v <= displayMaxStr;
+        return v >= selectableMinStr && v <= selectableMaxStr;
       });
       (tr as HTMLElement).style.display = hasVisibleDay ? '' : 'none';
     });

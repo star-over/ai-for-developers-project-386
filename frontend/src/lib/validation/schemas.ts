@@ -22,6 +22,3 @@ export const eventTypeSchema = z.object({
     .refine((v) => (VALID_DURATIONS as readonly number[]).includes(v), 'Недопустимая длительность')
     .describe('Длительность встречи в минутах'),
 });
-
-export type BookingFormData = z.infer<typeof bookingSchema>;
-export type EventTypeFormData = z.infer<typeof eventTypeSchema>;

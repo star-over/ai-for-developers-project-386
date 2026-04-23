@@ -1,15 +1,8 @@
-let innerWidth = $state(window.innerWidth);
-let listenerAttached = false;
+const query = window.matchMedia('(min-width: 768px)');
+let isDesktop = $state(query.matches);
 
-const ensureListener = () => {
-  if (listenerAttached) return;
-  listenerAttached = true;
-  window.addEventListener('resize', () => {
-    innerWidth = window.innerWidth;
-  });
-};
+query.addEventListener('change', (e) => {
+  isDesktop = e.matches;
+});
 
-export const getIsDesktop = () => {
-  ensureListener();
-  return innerWidth >= 768;
-};
+export const getIsDesktop = () => isDesktop;
