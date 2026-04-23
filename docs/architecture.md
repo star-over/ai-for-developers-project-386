@@ -39,9 +39,13 @@ Design First: TypeSpec → OpenAPI → раздельная реализация
 
 ### Тестирование
 - **Vitest** (unit-тесты, фронт + бэк)
-- **@testing-library/svelte** (компонентные тесты)
+- **@testing-library/svelte** (компонентные тесты — доступен, пока не используется)
 - **Playwright** (e2e тесты)
 - Бэкенд: `fastify.inject()` для тестирования роутов без поднятия сервера
+- Бэкенд тесты организованы по бизнес-доменам: `scheduling`, `event-types`, `admin`, `data-integrity`
+- Общие фабрики в `tests/helpers.ts` (`createTestApp`, `createEventType`, `createBooking`)
+- Фронтенд тесты: `utils.test.ts` (чистые функции), `validation.test.ts` (Zod-схемы)
+- Фронтенд vitest использует `TZ=UTC` для детерминированных дат
 
 ### Линтинг
 - **ESLint 10** (flat config, единый `eslint.config.js` в корне)
@@ -88,7 +92,7 @@ project/
 │   │   ├── store.ts             # In-memory Map хранилище + JSONL загрузка
 │   │   ├── validation.ts        # Zod-схемы валидации
 │   │   └── index.ts             # Точка входа
-│   ├── tests/                   # Vitest через fastify.inject()
+│   ├── tests/                   # Vitest через fastify.inject(), helpers.ts — фабрики
 │   └── package.json
 ├── e2e/                         # Playwright e2e тесты
 ├── docs/
