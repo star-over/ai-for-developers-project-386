@@ -5,6 +5,9 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [svelte(), tailwindcss()],
+  test: {
+    env: { TZ: 'UTC' },
+  },
   resolve: {
     alias: {
       $lib: path.resolve('./src/lib'),

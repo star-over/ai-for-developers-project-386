@@ -34,47 +34,29 @@ describe('getDurationColors', () => {
 });
 
 describe('formatDate', () => {
-  it('formats a regular date in Russian locale', () => {
-    const result = formatDate({ isoStr: '2026-04-20T09:00:00.000Z' });
-    expect(result).toContain('20');
-    expect(result).toMatch(/апрел/i);
-    expect(result).toContain('2026');
+  it('formats a regular date', () => {
+    expect(formatDate({ isoStr: '2026-04-20T09:00:00.000Z' })).toBe('20 апреля 2026 г.');
   });
 
   it('formats start of year', () => {
-    const result = formatDate({ isoStr: '2026-01-01T00:00:00.000Z' });
-    expect(result).toContain('1');
-    expect(result).toMatch(/январ/i);
-    expect(result).toContain('2026');
+    expect(formatDate({ isoStr: '2026-01-01T00:00:00.000Z' })).toBe('1 января 2026 г.');
   });
 
   it('formats end of year', () => {
-    // Use midday to avoid timezone-crossing into next day
-    const result = formatDate({ isoStr: '2026-12-31T12:00:00.000Z' });
-    expect(result).toMatch(/декабр/i);
-    expect(result).toContain('2026');
+    expect(formatDate({ isoStr: '2026-12-31T23:59:59.000Z' })).toBe('31 декабря 2026 г.');
   });
 });
 
 describe('formatTime', () => {
-  it('formats time as HH:MM', () => {
-    const result = formatTime({ isoStr: '2026-04-20T09:00:00.000Z' });
-    // Exact value depends on system timezone; just verify HH:MM format
-    expect(result).toMatch(/^\d{2}:\d{2}$/);
+  it('formats morning time', () => {
+    expect(formatTime({ isoStr: '2026-04-20T09:00:00.000Z' })).toBe('09:00');
   });
 
-  it('different UTC times produce different local times', () => {
-    const morning = formatTime({ isoStr: '2026-04-20T09:00:00.000Z' });
-    const afternoon = formatTime({ isoStr: '2026-04-20T16:30:00.000Z' });
-    expect(morning).not.toBe(afternoon);
+  it('formats afternoon time', () => {
+    expect(formatTime({ isoStr: '2026-04-20T16:30:00.000Z' })).toBe('16:30');
   });
 
-  it('uses 24-hour format', () => {
-    // 16:30 UTC → any timezone will be > 12 in some cases
-    const result = formatTime({ isoStr: '2026-04-20T16:30:00.000Z' });
-    const hour = parseInt(result.split(':')[0], 10);
-    // In any timezone east of UTC-5, this will be >= 12
-    expect(hour).toBeGreaterThanOrEqual(0);
-    expect(hour).toBeLessThan(24);
+  it('formats midnight', () => {
+    expect(formatTime({ isoStr: '2026-04-20T00:00:00.000Z' })).toBe('00:00');
   });
 });
