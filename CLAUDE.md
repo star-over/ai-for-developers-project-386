@@ -26,23 +26,13 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 - Drizzle ORM + SQLite — будущий этап
 
 ### Validation
-- Zod (frontend + backend, shared validation schemas)
-- Zod schemas: `.describe()` on every field + custom error messages for AI-agent context
-- Shared constants (`shared/constants.js`): `VALID_DURATIONS`, `SLOT_DURATION`, `WORK_START_HOUR`, `WORK_END_HOUR`
-- Backend `validation.ts`: atomic schemas (`UuidSchema`, `DurationSchema`, `IsoDatetimeSchema`) + API schemas + record schemas
-- Frontend `schemas.ts`: form validation with Russian messages, imports `VALID_DURATIONS` from shared
-- Never duplicate Zod schemas or constants — single source of truth through `shared/` and `validation.ts`
+- Zod (frontend + backend), shared constants in `shared/constants.js`
+- Never duplicate schemas or constants — single source of truth through `shared/` and `validation.ts`
 
 ### Testing
 - Vitest (unit), Playwright (e2e)
 - Backend: тесты по бизнес-доменам, фабрики в `tests/helpers.ts` — всегда используй их для новых тестов
 - Frontend: `TZ=UTC` в `vite.config.ts` для детерминированных дат
-
-### Tooling
-- TypeSpec → OpenAPI 3.x
-- Prism (mock-сервер для разработки фронта без бэкенда)
-- ESLint 10 (flat config), Airbnb style
-- Docker (multi-stage build)
 
 ## Project Structure
 
@@ -80,16 +70,12 @@ make help           # Show available commands
 
 ## Linting Policy
 
-- **errors** — только то, что ломает билд или вызывает баги (`eqeqeq`, `no-var`, `import-x/no-cycle`, etc.)
-- **warnings** — стиль и качество кода (`no-explicit-any`, `no-unused-vars`, `no-non-null-assertion`, `ban-ts-comment`, etc.)
-- `make lint` (pre-commit) — `--max-warnings 0`, любой warning = fail
-- `make lint-dev` (разработка) — warnings показываются, но не блокируют
-- При имплементации фокус на errors, warnings устраняются отдельным этапом
+- `make lint` (pre-commit) — strict, any warning = fail
+- `make lint-dev` (разработка) — warnings pass, only errors block
 
 ## Code Style
 
 - New functions: `const fx = (props) => {}` with call `fx({ var1, var2 })` — named params via object for AI-agent readability
-- ESLint: warn level, not blocking. Apply after working code is ready
 
 ## Git Workflow
 
@@ -107,6 +93,4 @@ make help           # Show available commands
 - `docs/spec.md` — спецификация продукта (роли, модели, бизнес-правила, API, страницы)
 - `docs/architecture.md` — архитектура и стек
 - `docs/plan.md` — план реализации (22 задачи)
-- **DO NOT** create `docs/superpowers/`, `docs/designs/`, or any extra subdirectories in `docs/`. All documentation lives flat in `docs/`.
-- **Prefer updating existing files.** If new knowledge fits into an existing doc — add it there organically, don't create a separate file.
-- **New files are OK** when a genuinely new entity or concept emerges (e.g., UI design conventions, deployment guide) that doesn't belong in existing docs. Create it flat in `docs/`, not in subdirectories.
+- Docs live flat in `docs/` — no subdirectories. Prefer updating existing files over creating new ones.
