@@ -106,6 +106,25 @@ describe('Scheduling', () => {
       const res = await app.inject({ method: 'DELETE', url: '/api/bookings/00000000-0000-0000-0000-000000000000' });
       expect(res.statusCode).toBe(404);
     });
+
+    it('rejects startTime before work hours (08:30)', async () => {
+      const { res } = await createBooking({ app, eventTypeId, startTime: '2026-04-20T08:30:00.000Z' });
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('rejects startTime at WORK_END_HOUR boundary (17:00)', async () => {
+      const { res } = await createBooking({ app, eventTypeId, startTime: '2026-04-20T17:00:00.000Z' });
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('rejects missing startTime in payload', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/bookings',
+        payload: { eventTypeId, guestName: 'Alice', guestEmail: 'alice@test.com' },
+      });
+      expect(res.statusCode).toBe(400);
+    });
   });
 
   describe('Slot Generation', () => {
@@ -174,6 +193,56 @@ describe('Scheduling', () => {
       const slots = res.json();
       const slot1000 = slots.find((s: { startTime: string }) => s.startTime.includes('10:00'));
       expect(slot1000.available).toBe(false);
+    });
+
+    it('deleted booking frees the slot', async () => {
+      const { body: created } = await createBooking({ app, eventTypeId, startTime: '2026-04-20T09:00:00.000Z' });
+      await app.inject({ method: 'DELETE', url: `/api/bookings/${created.id}` });
+
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/slots?date=2026-04-20&eventTypeId=${eventTypeId}`,
+      });
+      const slots = res.json();
+      const slot0900 = slots.find((s: { startTime: string }) => s.startTime.includes('09:00'));
+      expect(slot0900.available).toBe(true);
+    });
+
+    it('fully booked day shows all slots as unavailable', async () => {
+      const slotTimes = Array.from({ length: 16 }, (_, i) => {
+        const hour = 9 + Math.floor(i / 2);
+        const min = (i % 2) * 30;
+        return `2026-04-20T${String(hour).padStart(2, '0')}:${String(min).padStart(2, '0')}:00.000Z`;
+      });
+
+      for (let i = 0; i < slotTimes.length; i++) {
+        await createBooking({
+          app,
+          eventTypeId,
+          guestName: `Guest${i}`,
+          guestEmail: `guest${i}@test.com`,
+          startTime: slotTimes[i],
+        });
+      }
+
+      const res = await app.inject({
+        method: 'GET',
+        url: `/api/slots?date=2026-04-20&eventTypeId=${eventTypeId}`,
+      });
+      const slots = res.json();
+      expect(slots).toHaveLength(16);
+      expect(slots.every((s: { available: boolean }) => s.available === false)).toBe(true);
+    });
+  });
+
+  describe('Booking + EventType Interaction', () => {
+    it('deleting eventType does not delete its bookings (denormalization)', async () => {
+      const { body: booking } = await createBooking({ app, eventTypeId, startTime: '2026-04-20T09:00:00.000Z' });
+      await app.inject({ method: 'DELETE', url: `/api/event-types/${eventTypeId}` });
+
+      const res = await app.inject({ method: 'GET', url: `/api/bookings/${booking.id}` });
+      expect(res.statusCode).toBe(200);
+      expect(res.json().eventTypeName).toBe('Call');
     });
   });
 });
