@@ -4,8 +4,8 @@
   import { createEventTypesList } from '$lib/api/default/default.js';
   import type { EventType } from '$lib/api/model/index.js';
   import * as Card from '$lib/components/ui/card/index.js';
-  import { Button } from '$lib/components/ui/button/index.js';
   import EventTypeCardContent from '$lib/components/EventTypeCardContent.svelte';
+  import QueryError from '$lib/components/QueryError.svelte';
   import { setSelectedEventType } from '$lib/stores/selectedEventType.svelte.js';
   import { t } from '$lib/i18n/index.js';
 
@@ -25,10 +25,7 @@
       <div class="mb-3 h-20 animate-pulse rounded-lg bg-muted"></div>
     {/each}
   {:else if query.isError}
-    <div class="rounded-lg border border-destructive/20 bg-destructive/10 p-4 text-center">
-      <p class="mb-3 text-destructive">{t.common.error}</p>
-      <Button variant="outline" onclick={() => query.refetch()}>{t.common.retry}</Button>
-    </div>
+    <QueryError onRetry={() => query.refetch()} />
   {:else if !query.data?.data || query.data.data.length === 0}
     <p class="text-center text-muted-foreground">{t.eventTypes.empty}</p>
   {:else}

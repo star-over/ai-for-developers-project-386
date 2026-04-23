@@ -4,7 +4,7 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import { Calendar } from '$lib/components/ui/calendar/index.js';
   import { t } from '$lib/i18n/index.js';
-  import { cn } from '$lib/utils.js';
+  import { cn, formatTime } from '$lib/utils.js';
   import SunriseIcon from '@lucide/svelte/icons/sunrise';
   import SunIcon from '@lucide/svelte/icons/sun';
   import SunsetIcon from '@lucide/svelte/icons/sunset';
@@ -47,11 +47,6 @@
   const query = $derived(
     createSlotsList(() => ({ date: selectedDate, eventTypeId })),
   );
-
-  const formatTime = ({ isoStr }: { isoStr: string }) => {
-    const d = new Date(isoStr);
-    return d.toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
-  };
 
   const selectSlot = ({ startTime }: { startTime: string }) => {
     selectedSlot = startTime;

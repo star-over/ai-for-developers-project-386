@@ -10,6 +10,7 @@
   import * as Card from '$lib/components/ui/card/index.js';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import ResponsiveModal from '$lib/components/ResponsiveModal.svelte';
+  import QueryError from '$lib/components/QueryError.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import MoreVerticalIcon from '@lucide/svelte/icons/more-vertical';
@@ -104,10 +105,7 @@
       <div class="mb-3 h-20 animate-pulse rounded-lg bg-muted"></div>
     {/each}
   {:else if query.isError}
-    <div class="rounded-lg border border-destructive/20 bg-destructive/10 p-4 text-center">
-      <p class="mb-3 text-destructive">{t.common.error}</p>
-      <Button variant="outline" onclick={() => query.refetch()}>{t.common.retry}</Button>
-    </div>
+    <QueryError onRetry={() => query.refetch()} />
   {:else if !query.data?.data || query.data.data.length === 0}
     <p class="text-center text-muted-foreground">{t.admin.eventTypes.empty}</p>
   {:else}

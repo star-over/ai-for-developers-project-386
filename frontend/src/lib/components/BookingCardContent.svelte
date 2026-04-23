@@ -4,7 +4,7 @@
   import ClockIcon from '@lucide/svelte/icons/clock';
   import UserIcon from '@lucide/svelte/icons/user';
   import MailIcon from '@lucide/svelte/icons/mail';
-  import { getDurationColors } from '$lib/utils.js';
+  import { getDurationColors, formatDate, formatTime } from '$lib/utils.js';
   import { t } from '$lib/i18n/index.js';
 
   const {
@@ -22,12 +22,6 @@
     guestEmail?: string;
     actions?: Snippet;
   } = $props();
-
-  const formatDate = ({ isoStr }: { isoStr: string }) =>
-    new Date(isoStr).toLocaleDateString('ru', { day: 'numeric', month: 'long', year: 'numeric' });
-
-  const formatTime = ({ isoStr }: { isoStr: string }) =>
-    new Date(isoStr).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
 
   const colors = $derived(getDurationColors({ duration }));
 </script>
