@@ -107,5 +107,36 @@ describe('Event Types API', () => {
       });
       expect(res.statusCode).toBe(400);
     });
+
+    it('PATCH /api/event-types/:id rejects invalid duration', async () => {
+      const created = await createEventType({ app });
+      const res = await app.inject({
+        method: 'PATCH',
+        url: `/api/event-types/${created.id}`,
+        payload: { duration: 25 },
+      });
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('PATCH /api/event-types/:id with empty payload returns 200 unchanged', async () => {
+      const created = await createEventType({ app });
+      const res = await app.inject({
+        method: 'PATCH',
+        url: `/api/event-types/${created.id}`,
+        payload: {},
+      });
+      expect(res.statusCode).toBe(200);
+      expect(res.json().name).toBe('Call');
+      expect(res.json().duration).toBe(30);
+    });
+
+    it('POST /api/event-types rejects empty payload', async () => {
+      const res = await app.inject({
+        method: 'POST',
+        url: '/api/event-types',
+        payload: {},
+      });
+      expect(res.statusCode).toBe(400);
+    });
   });
 });
