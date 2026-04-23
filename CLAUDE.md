@@ -4,26 +4,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-«Запись на звонок» — упрощённый сервис бронирования времени по мотивам Cal.com.
+"Call Booking" — a simplified time-booking service inspired by Cal.com.
 Hexlet educational project "AI for Developers" (project-386). Repository: `star-over/ai-for-developers-project-386`.
 
 ## Approach
 
-- **Design First:** TypeSpec → OpenAPI → раздельная реализация фронтенда и бэкенда
-- API-контракт (`spec/main.tsp` → `openapi.yaml`) — единый источник правды
-- Вся разработка ведётся через AI-агентов, ручной код не пишется
+- **Design First:** TypeSpec → OpenAPI → separate frontend and backend implementation
+- API contract (`spec/main.tsp` → `openapi.yaml`) is the single source of truth
+- All development is done via AI agents — no manual code
 
 ## Tech Stack
 
 ### Frontend
 - Svelte 5 (runes), Vite, Tailwind 4, shadcn-svelte
 - @tanstack/svelte-query, @mateothegreat/svelte5-router
-- Orval (генерация TanStack Query хуков из OpenAPI)
-- SPA, без SSR/SvelteKit
+- Orval (generates TanStack Query hooks from OpenAPI)
+- SPA, no SSR/SvelteKit
 
 ### Backend
 - Node.js + Fastify, Zod validation, in-memory store (Map + JSONL seed)
-- Drizzle ORM + SQLite — будущий этап
+- Drizzle ORM + SQLite — future phase
 
 ### Validation
 - Zod (frontend + backend), shared constants in `shared/constants.js`
@@ -31,19 +31,19 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 
 ### Testing
 - Vitest (unit), Playwright (e2e)
-- Backend: тесты по бизнес-доменам, фабрики в `tests/helpers.ts` — всегда используй их для новых тестов
-- Frontend: `TZ=UTC` в `vite.config.ts` для детерминированных дат
+- Backend: tests organized by business domains, factories in `tests/helpers.ts` — always use them for new tests
+- Frontend: `TZ=UTC` set in `vite.config.ts` for deterministic date assertions
 
 ## Project Structure
 
 ```
-shared/         # Общие константы (JS + .d.ts) для frontend и backend
+shared/         # Shared constants (JS + .d.ts) for frontend and backend
 spec/           # TypeSpec → OpenAPI
 frontend/       # Svelte 5 SPA
-backend/        # Fastify API + SQLite
-e2e/            # Playwright e2e тесты
+backend/        # Fastify API + in-memory store
+e2e/            # Playwright e2e tests
 docs/           # spec.md, architecture.md, plan.md
-Makefile        # Команды сборки, генерации, тестов
+Makefile        # Build, generate, test commands
 ```
 
 ## Key Commands
@@ -71,7 +71,7 @@ make help           # Show available commands
 ## Linting Policy
 
 - `make lint` (pre-commit) — strict, any warning = fail
-- `make lint-dev` (разработка) — warnings pass, only errors block
+- `make lint-dev` (development) — warnings pass, only errors block
 
 ## Code Style
 
@@ -90,7 +90,7 @@ make help           # Show available commands
 
 ## Docs
 
-- `docs/spec.md` — спецификация продукта (роли, модели, бизнес-правила, API, страницы)
-- `docs/architecture.md` — архитектура и стек
-- `docs/plan.md` — план реализации (22 задачи)
+- `docs/spec.md` — product spec (roles, models, business rules, API, pages)
+- `docs/architecture.md` — architecture and tech stack
+- `docs/plan.md` — implementation plan (22 tasks)
 - Docs live flat in `docs/` — no subdirectories. Prefer updating existing files over creating new ones.
