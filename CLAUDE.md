@@ -35,18 +35,8 @@ Hexlet educational project "AI for Developers" (project-386). Repository: `star-
 
 ### Testing
 - Vitest (unit), Playwright (e2e)
-- Backend tests organized by business domains, not API resources:
-  - `tests/helpers.ts` — shared factories (`createTestApp`, `createEventType`, `createBooking`)
-  - `tests/scheduling.test.ts` — bookings + slots + availability (unified scheduling domain)
-  - `tests/event-types.test.ts` — CRUD + validation for event types, health endpoint
-  - `tests/admin.test.ts` — admin bookings list
-  - `tests/data-integrity.test.ts` — store + seed data validation
-- Frontend tests split by concern:
-  - `__tests__/utils.test.ts` — getDurationColors, formatDate, formatTime
-  - `__tests__/validation.test.ts` — bookingSchema, eventTypeSchema edge cases
-- Frontend vitest uses `TZ=UTC` (set in `vite.config.ts` `test.env`) for deterministic date/time assertions
-- All backend test files use `afterEach` with `app.close()` for cleanup
-- When adding new backend tests, use factories from `helpers.ts` — never inline `buildApp()` + `app.ready()` + `app.inject(POST /api/event-types)`
+- Backend: тесты по бизнес-доменам, фабрики в `tests/helpers.ts` — всегда используй их для новых тестов
+- Frontend: `TZ=UTC` в `vite.config.ts` для детерминированных дат
 
 ### Tooling
 - TypeSpec → OpenAPI 3.x
