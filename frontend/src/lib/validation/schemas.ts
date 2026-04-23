@@ -4,6 +4,7 @@ import { VALID_DURATIONS } from '../../../../shared/constants.js';
 export const bookingSchema = z.object({
   guestName: z
     .string()
+    .trim()
     .min(1, 'Имя обязательно')
     .describe('Имя гостя для бронирования'),
   guestEmail: z

@@ -18,10 +18,9 @@ describe('bookingSchema', () => {
     expect(result.success).toBe(false);
   });
 
-  it('whitespace-only name passes min(1) — documents current behavior', () => {
+  it('rejects whitespace-only name', () => {
     const result = bookingSchema.safeParse({ guestName: '   ', guestEmail: 'alice@test.com' });
-    // min(1) checks length, not content — '   '.length === 3 > 1
-    expect(result.success).toBe(true);
+    expect(result.success).toBe(false);
   });
 
   it('rejects email without domain', () => {

@@ -40,7 +40,7 @@ export const UpdateEventTypeSchema = z.object({
 
 export const CreateBookingSchema = z.object({
   eventTypeId: UuidSchema.describe('ID of the event type to book (UUID v4)'),
-  guestName: z.string().min(1, 'Name must not be empty').describe('Guest name'),
+  guestName: z.string().trim().min(1, 'Name must not be empty').describe('Guest name'),
   guestEmail: z.string().email('Invalid email address').describe('Guest email'),
   startTime: IsoDatetimeSchema.describe('Slot start time in UTC ISO 8601'),
 });
@@ -64,7 +64,7 @@ export const BookingRecordSchema = z.object({
   eventTypeId: UuidSchema.describe('Referenced event type ID'),
   eventTypeName: z.string().min(1).describe('Denormalized event type name'),
   duration: DurationSchema.describe('Denormalized duration'),
-  guestName: z.string().min(1, 'Name must not be empty').describe('Guest name'),
+  guestName: z.string().trim().min(1, 'Name must not be empty').describe('Guest name'),
   guestEmail: z.string().email('Invalid email address').describe('Guest email'),
   startTime: IsoDatetimeSchema.describe('Slot start time'),
   endTime: IsoDatetimeSchema.describe('Slot end time'),
