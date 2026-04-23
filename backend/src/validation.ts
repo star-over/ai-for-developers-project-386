@@ -8,12 +8,7 @@ export const UuidSchema = z.string().uuid('must be a valid UUID').describe('UUID
 
 const durationStrings = VALID_DURATIONS.map(String) as unknown as readonly [string, string, ...string[]];
 export const DurationSchema = z.enum(durationStrings).transform(Number)
-  .or(z.union([
-    z.literal(VALID_DURATIONS[0]),
-    z.literal(VALID_DURATIONS[1]),
-    z.literal(VALID_DURATIONS[2]),
-    z.literal(VALID_DURATIONS[3]),
-  ]))
+  .or(z.number().refine((n) => (VALID_DURATIONS as readonly number[]).includes(n), 'Invalid duration'))
   .describe('Meeting duration in minutes');
 
 export const IsoDatetimeSchema = z.string().datetime('Invalid datetime format').describe('UTC ISO 8601 datetime');

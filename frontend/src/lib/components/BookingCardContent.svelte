@@ -5,6 +5,7 @@
   import UserIcon from '@lucide/svelte/icons/user';
   import MailIcon from '@lucide/svelte/icons/mail';
   import { getDurationColors } from '$lib/utils.js';
+  import { t } from '$lib/i18n/index.js';
 
   const {
     eventTypeName,
@@ -65,7 +66,7 @@
 
     <span class="mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium {colors.badge}">
       <ClockIcon class="h-3 w-3" />
-      {duration} мин
+      {duration} {t.eventTypes.minutes}
     </span>
   </div>
 

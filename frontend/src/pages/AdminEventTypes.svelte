@@ -19,6 +19,7 @@
   import { Label } from '$lib/components/ui/label/index.js';
   import { eventTypeSchema } from '$lib/validation/schemas.js';
   import { t } from '$lib/i18n/index.js';
+  import { VALID_DURATIONS } from '../../../shared/constants.js';
   import { useQueryClient } from '@tanstack/svelte-query';
 
   const queryClient = useQueryClient();
@@ -171,7 +172,7 @@
         bind:value={formDuration}
         class="h-10 w-full rounded-3xl border border-border bg-background shadow-sm px-3 py-2 text-sm"
       >
-        {#each [10, 15, 20, 30] as d (d)}
+        {#each VALID_DURATIONS as d (d)}
           <option value={d}>{d} {t.eventTypes.minutes}</option>
         {/each}
       </select>
